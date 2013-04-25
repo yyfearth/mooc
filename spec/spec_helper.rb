@@ -7,6 +7,5 @@ def root_path
 end
 
 set :environment, :test
-set :views, "#{root_path}/../views"
 
 Dir["#{root_path}/app/models/*.rb"].each{ |file| require file }

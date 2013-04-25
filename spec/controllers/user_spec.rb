@@ -9,8 +9,8 @@ describe 'controller' do
     @app ||= Sinatra::Application
   end
 
-  it 'should return the list of installed printers' do
-    get '/'
+  it 'should return json' do
+    get '/users'
     last_response.should be_ok
   end
 end
