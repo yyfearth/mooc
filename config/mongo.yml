@@ -1,0 +1,11 @@
+development:
+  host: localhost
+  port: 27017
+  database: mooc-dev
+    
+production:
+  host: localhost
+  port: 27017
+  database: mooc
+    
+environment: development
