@@ -10,10 +10,8 @@ not_found do
   status 404
 end
 
-set :views, File.dirname(__FILE__) + '/views'
-
 # Else read the local configuration
-@config = YAML.load_file('config/mongo.yml')
+@config = YAML.load_file(File.dirname(__FILE__) + '/config/mongo.yml')
   
 @environment = @config['environment']
 
@@ -30,6 +28,8 @@ MongoMapper.database = @db_name
 MongoMapper.connection.connect
 
 path = File.expand_path '../', __FILE__
+
+Dir["#{path}/utils/*.rb"].each{ |file| require file }
 
 Dir["#{path}/models/*.rb"].each{ |file| require file }
 

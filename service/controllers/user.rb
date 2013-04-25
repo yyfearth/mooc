@@ -11,20 +11,8 @@ end
 
 # search users
 get '/users' do
-  offset = params[:offset] || 0
-  limit = params[:limit] || 20
-  order_by = params[:order_by] || :created_by.desc
-  created_from = params[:created_from]
-  created_to = params[:created_to]
-  updated_from = params[:updated_from]
-  updated_to = params[:updated_to]
-  q = {}
-  q[:created_at.gte] = Time.parse(created_from) if created_from
-  q[:created_at.lte] = Time.parse(created_to) if created_to
-  q[:updated_at.gte] = Time.parse(updated_from) if updated_from
-  q[:updated_at.lte] = Time.parse(updated_to) if updated_to
-  puts q
-  users = User.where(q).order(order_by).offset(offset).limit(limit)
+  q = SearchParams.new params
+  users = User.where(q.where).order(q.order_by).offset(q.offset).limit(q.limit)
   users.to_json
 end
 
@@ -85,3 +73,4 @@ delete '/users/all' do
   User.destroy_all
   OK.create 'All users cleared'
 end
+

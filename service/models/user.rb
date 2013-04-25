@@ -1,5 +1,3 @@
-require 'mongo_mapper'
-
 class User
   include MongoMapper::Document
   safe
