@@ -1,9 +1,10 @@
 require 'sinatra'
+require 'json'
 require 'yaml'
 require 'mongo_mapper'
 
 configure do
-  root = File.expand_path(File.dirname(__FILE__))
+  root = File.expand_path File.dirname(__FILE__)
 end
 
 not_found do
@@ -11,7 +12,7 @@ not_found do
 end
 
 # Else read the local configuration
-@config = YAML.load_file(File.dirname(__FILE__) + '/config/mongo.yml')
+@config = YAML.load_file File.dirname(__FILE__) + '/config/mongo.yml'
   
 @environment = @config['environment']
 
@@ -22,16 +23,18 @@ end
 
 # Configure the environment
 
-MongoMapper.connection = Mongo::Connection.new(@db_host, @db_port)
+MongoMapper.connection = Mongo::Connection.new @db_host, @db_port
 MongoMapper.database = @db_name
 
 MongoMapper.connection.connect
 
 path = File.expand_path '../', __FILE__
 
-Dir["#{path}/utils/*.rb"].each{ |file| require file }
+Dir["#{path}/utils/*.rb"].each { |file| require file }
 
-Dir["#{path}/models/*.rb"].each{ |file| require file }
+Dir["#{path}/models/*.rb"].each { |file| require file }
 
-Dir["#{path}/controllers/*.rb"].each{ |file| load file }
-
+#Dir["#{path}/controllers/*.rb"].each{ |file| load file }
+require 'controllers/base'
+require 'controllers/user'
+run UserController.new
