@@ -32,9 +32,6 @@ end
 # create a new user
 post '/users' do
   json = JSON.parse request.body.read
-  #user = User.create json
-  #user.password = json['password'] # for protected
-  #user.save!
   email = json['email']
   if email.to_s.empty?
     bad_request 'EMAIL_EMPTY', 'Email is required'

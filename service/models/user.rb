@@ -10,10 +10,6 @@ class User
 
   timestamps!
 
-  # cannot be set by massive assignment
-  # need to use: `user.password = json['password']`
-  #attr_protected :password
-
   before_save do
     # replace id to email
     self.id = self.email
@@ -22,7 +18,7 @@ class User
   end
 
   def serializable_hash(options = {})
-    super({:except => [:id, :password]}.merge(options))
+    super({:except => :id}.merge(options))
   end
 
 end
