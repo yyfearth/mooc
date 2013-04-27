@@ -16,9 +16,9 @@ class User
 
   before_save do
     # replace id to email
-    @id = @email
+    self.id = self.email
     # remove address if it is empty
-    @address = nil if @address != nil and @address.empty?
+    self.address = nil if self.address != nil and self.address.empty?
   end
 
   def serializable_hash(options = {})
