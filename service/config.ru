@@ -1,6 +1,6 @@
-path = File.expand_path "../", __FILE__
+$: << File.expand_path(File.dirname(__FILE__))
 
-require "#{path}/init"
+require 'init'
 
 set :run, false
 set :environment, :production

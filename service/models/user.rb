@@ -27,4 +27,4 @@ class User
 
 end
 
-User.ensure_index :email, :unique => true
+#User.ensure_index :email, :unique => true
