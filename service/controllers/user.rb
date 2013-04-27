@@ -1,4 +1,3 @@
-
 # get a user by email (id)
 get '/user/:email' do
   email = params[:email]
@@ -16,14 +15,18 @@ get '/users' do
   ok users
 end
 
+# check user credentials via basic auth
 get '/user/validation' do
-  email = params[:email]
-  user = User.find_by_id email
-  if user
-    ok user
-  else
-    not_found 'USER_NOT_FOUND', "User with email #{email} is not found"
+  auth = Rack::Auth::Basic::Request.new(request.env)
+  if auth.provided? and auth.basic? and auth.credentials
+    email = auth.credentials[0]
+    user = User.find_by_id email
+    if user and auth.credentials[1] == user.password
+      ok 'User validation passed'
+    end
   end
+  headers['WWW-Authenticate'] = 'Basic realm="User Validation"'
+  err 401, 'NOT_AUTHORIZED', 'User validation failed'
 end
 
 # create a new user
