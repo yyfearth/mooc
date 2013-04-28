@@ -14,7 +14,7 @@ class User
     # replace id to email
     self.id = self.email
     # remove address if it is empty
-    self.address = nil if self.address != nil and self.address.empty?
+    self.address = nil if self.address.nil? and self.address.empty?
   end
 
   def serializable_hash(options = {})
@@ -23,4 +23,4 @@ class User
 
 end
 
-#User.ensure_index :email, :unique => true
+User.ensure_index :email, :unique => true
