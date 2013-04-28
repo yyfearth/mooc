@@ -3,7 +3,7 @@ RESTful API (Draft)
 
 -- Proposed by Wilson (Yufan) Yang <yyfearth@gmail.com>
 
-Use JSON as the format for the body of both request and response, except for login and view.
+Use JSON as the format for the body of both request and response.
 
 For all response, there should be a header: `Content-Type: application/json; charset=utf-8`
 
@@ -27,80 +27,12 @@ Basic Auth and OAuth should be introduced for Access control, but I think we do 
 2. All get by ID method support GET and HEAD method, when use HEAD it should return the same status code as GET but no content returned
 3. For most entities, use POST to create, PUT to update, GET to query and DELETE to remove
 4. For some APIs does not return entity(ies), it should return a Success JSON to indicate it success, and all exception should return a proper Status Code (400 for Bad Request, 404 for 5. Not Found, 500 for Internal Error, etc.) with a Error JSON.
-5. Some entity(ies) has a View API, it should redirect to your corresponding page in your web server
 
+**ATTENTION:**
+Since the RESTful API should be only used for Web Server not for Clients (in browser), your web server should take care of all responsibility for security and privacy issues.
+DO NOT ALLOW clients directly access the API without go through your web server.
 
 ---
-
-Login / Logout
---------------
-
-### User Login
-
-#### Usage
-
-* Use for login into system for both service provider and consumer(server or client).  
-POST email and password to login, or use GET without password to just display the login page.
-* A callback URL should given if it designed to go back to the consumer’s web page.
-* The service provider should create a session id and write to the cookie.
-* It is NOT a RESTful API, instead it an API for web interface, designed for the teams do not want to implement the login page in their own web server.
-* It should be implemented by the teams, who selected the user parts, in there web server.
-
-#### Request
-
-Method | URL | Request Body (Encoded Form)
--------|-----|-------------
-POST | http://host:port/login?callback=`:url` | email=`:email`&password=`:password`
-GET | http://host:port/login?email=`:email`&callback=`:url` | -
-
-##### Parameters
-
-Parameter | Value | Method
-----------|-------|-------
-callback | The URL direct to after login successfully | GET (in URL) / POST (in Body)
-email | The email of the user want to login | GET (in URL) / POST (in Body)
-password | The original not hashed password | Must use POST (in Body)
-
-#### Response
-
-* It always show the login page, email should be already filled in if it is given.
-* If both the email and password are given via POST, the page should submit automatically.
-* After login succeed, it will redirect to the URL given in the callback parameter, 
-if it is not given, just go to the default page after login.
-* If login failed, just go back to the login page and require the user login manually, 
-but please preserve the callback URL, since it should work after a success login.
-
-
-### User Logout
-
-#### Usage
-
-* Use for logout the system for both service provider and consumer(server or client).
-* Just call the logout URL, and it should be clear the session if user logged in. 
-* A callback URL should given if it designed to go back to the consumer’s web page.
-* The service provider should clear the session id and the cookie.
-* It is NOT a RESTful API, instead it an API for web interface, designed for the teams do not want to implement the login page in their own web server.
-* It should be implemented by the teams, who selected the user parts, in there web server.
-
-#### Request
-
-Method | URL
--------|----
-GET | http://host:port/logout?callback=`:url`
-
-##### Parameters
-
-Parameter | Value
-----------|------
-callback  | The URL direct to after logged out successfully
-
-#### Response
-
-* It should be the same behavior as user logout using the provider's web GUI.
-* After logged out, it will redirect to the URL given in the callback parameter,
-if it is not given, just go to the default page after logged out.
-* If user is not logged in or any other errors, it should display the error
-information in a page as same as a user using the web GUI.
 
 ## User
 
@@ -133,7 +65,6 @@ Status Code | Response Body | Condition
 #### Usage
 
 * It used for any situation when servers or clients need the user’s information by given email.
-* DO NOT use it for User Login, since it is not require a password and not return with password.
 
 #### Request
 
@@ -145,7 +76,7 @@ GET | http://host:port/user/`:email`
 
 Status Code | Response Body | Condition
 ------------|---------------|----------
-200 (OK) | User JSON w/o password | Success
+200 (OK) | User JSON | Success
 400 (Bad Request) | Error JSON | Email is invalid
 404 (Not Found) | Error JSON | User not found
 500 (Internal Server Error) | Error JSON | Other Errors
@@ -183,7 +114,7 @@ GET | http://host:port/user/`:email`/view
 
 Method | URL | Request Body
 -------|-----|-------------
-POST | http://host:port/user**s** | User JSON with password
+POST | http://host:port/user**s** | User JSON
 
 ##### Response
 
@@ -193,7 +124,7 @@ Status Code | Response Body | Condition
 409 (Conflict) | Error JSON | Email is duplicated
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Save/Update User
+### Save User
 
 #### Usage
 
@@ -211,8 +142,8 @@ PUT | http://host:port/user/`:email` | User JSON *
 
 Status Code | Response Body | Condition
 ------------|---------------|----------
-201 (Created) | User JSON w/o password | Create new user if not exists
-200 (OK) | User JSON w/o password | Update existing user
+201 (Created) | User JSON | Create new user if not exists
+200 (OK) | User JSON | Update existing user
 400 (Bad Request) | Error JSON | Email or JSON is invalid
 500 (Internal Server Error) | Error JSON | Other Errors
 
@@ -233,7 +164,7 @@ PUT | http://host:port/user/`:email`/password | The hashed password
 
 Status Code | Response Body | Condition
 ------------|---------------|----------
-200 (OK) | User JSON w/o password | Update successful
+200 (OK) | User JSON | Update successful
 400 (Bad Request) | Error JSON | Email or password is invalid
 404 (Not Found) | Error JSON | User not found
 500 (Internal Server Error) | Error JSON | Other Errors
@@ -516,7 +447,7 @@ GET | http://host:port/course/`:id`/participant**s**
 
 Status Code | Response Body | Condition
 ------------|---------------|----------
-200 (OK) | User Array JSON w/o password | Success
+200 (OK) | User Array JSON | Success
 400 (Bad Request) | Error JSON | ID is invalid
 404 (Not Found) | Error JSON | Course not found
 500 (Internal Server Error) | Error JSON | Other Errors
