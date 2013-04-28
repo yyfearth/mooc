@@ -3,10 +3,9 @@ class Category
   safe
 
   key :name, String, :required => true
-  key :address, Address
 
   timestamps!
 
 end
 
-User.ensure_index :name, :unique => true
+Category.ensure_index :name, :unique => true
