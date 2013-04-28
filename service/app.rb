@@ -25,11 +25,21 @@ class App < Sinatra::Application
     MongoMapper.database = db_name
 
     MongoMapper.connection.connect
+
+    helpers do
+      include Rack::Utils
+    end
+
   end
 
+  # models
   require 'models/user'
+  require 'models/category'
+  # controllers
   require 'controllers/base'
   require 'controllers/user'
   require 'controllers/category'
 
+  use UserController
+  use CategoryController
 end

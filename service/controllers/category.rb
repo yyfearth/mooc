@@ -62,6 +62,4 @@ class CategoryController < EntityController
     ok 'All categories cleared'
   end
 
-  run!
-
 end

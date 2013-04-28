@@ -103,6 +103,4 @@ class UserController < Controller
     ok 'All users cleared'
   end
 
-  run!
-
 end
