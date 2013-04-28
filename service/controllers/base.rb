@@ -66,3 +66,26 @@ class Controller < Sinatra::Base
   end
 
 end
+
+class EntityController < Controller
+
+  helpers do
+
+    def entity_not_found?(entity_class, id, entity)
+      name = entity_class.class.name
+      not_found name.upcase + '_NOT_FOUND', name + " with id #{id} is not found" if entity.nil?
+    end
+
+    def no_id_in_json?(json)
+      bad_request 'ID_EMPTY', 'ID is required' if json['id'].to_s.empty?
+    end
+
+    def id_not_matched?(params, json)
+      url_id = params[:id]
+      json_id = json['id']
+      bad_request 'ID_NOT_MATCH', "ID in URL is not matched #{url_id} != #{json_id}" if url_id != json_id
+    end
+
+  end
+
+end

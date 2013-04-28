@@ -31,5 +31,6 @@ class App < Sinatra::Application
   require 'models/user'
   require 'controllers/base'
   require 'controllers/user'
+  require 'controllers/category'
 
 end
