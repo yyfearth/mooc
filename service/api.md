@@ -81,26 +81,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | User not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View User by Email
-
-#### Usage
-
-* It will redirect to the specified user profile’s web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL
--------|----
-GET | http://host:port/user/`:email`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified user profile using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### Search Users
 
 ### Create User
@@ -205,26 +185,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Category not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View Category by ID
-
-#### Usage
-
-* It will redirect to the specified category’s web view (may show the courses) of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL
--------|----
-GET | http://host:port/category/`:id`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified category using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### List All Categories
 
 #### Request
@@ -309,26 +269,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Course not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View Course by ID
-
-#### Usage
-
-* It will redirect to the course home page of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL
--------|----
-GET | http://host:port/course/`:id`/view
-
-#### Response
-
-* It should redirect to the URL of the specified course home page using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### Search Courses
 
 #### Request
@@ -360,26 +300,6 @@ Status Code | Response Body | Condition
 ------------|---------------|----------
 200 (OK) | Course Array JSON | Success
 500 (Internal Server Error) | Error JSON | Other Errors
-
-### View Course List
-
-#### Usage
-
-* It will redirect to the course list page of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/course**s**/view
-
-#### Response
-
-* It should redirect to the URL of the course list page using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
 
 ### Add Course
 
@@ -452,27 +372,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Course not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View Participants List
-
-#### Usage
-
-* It will redirect to the specified participants web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/course/`:id`/participant**s**/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified user profile
-using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### Drop / Enroll Course
 
 * Just update the course entity with course id by adding or removing a user from the participants.
@@ -495,48 +394,6 @@ Status Code | Response Body | Condition
 400 (Bad Request) | Error JSON | ID is invalid
 404 (Not Found) | Error JSON | Announcement not found
 500 (Internal Server Error) | Error JSON | Other Errors
-
-### View Announcement by ID
-
-#### Usage
-
-* It will redirect to the specified announcement web view, of the service provider, show messages.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/announcement/`:id`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified announcement
-using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
-### View Announcement List
-
-#### Usage
-
-* It will redirect to the announcement list web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/announcement**s**/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the announcement list using
-301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
 
 ### Search Announcements
 
@@ -639,48 +496,6 @@ Status Code | Response Body | Condition
 400 (Bad Request) | Error JSON | ID is invalid
 404 (Not Found) | Error JSON | Discussion not found
 500 (Internal Server Error) | Error JSON | Other Errors
-
-### View Discussion by ID
-
-#### Usage
-
-* It will redirect to the specified discussion web view, of the service provider, show messages.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/discussion/`:id`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified discussion
-using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
-### View Discussion List
-
-#### Usage
-
-* It will redirect to the discussion list web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/discussion**s**/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the discussion list using
-301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
 
 ### Search Discussions
 
@@ -886,27 +701,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Quiz not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View Quiz by ID
-
-#### Usage
-
-* It will redirect to the specified quiz web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves. 
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/quiz/`:id`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified quiz using 301
-(Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### Search Quizzes by Course ID
 
 #### Request
@@ -1006,27 +800,6 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Quiz not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### View Submission List
-
-#### Usage
-
-* It will redirect to the the submission list page of specified quiz of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/quiz/`:id`/submission**s**/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the submission list of
-specified quiz using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
-
 ### Get Submission of a Quiz by ID
 
 #### Request
@@ -1043,27 +816,6 @@ Status Code | Response Body | Condition
 400 (Bad Request) | Error JSON | ID is invalid
 404 (Not Found) | Error JSON | Quiz not found
 500 (Internal Server Error) | Error JSON | Other Errors
-
-### View Submission
-
-#### Usage
-
-* It will redirect to the specified submission web view of the service provider.
-* It redirect to a HTML web page instead of return the JSON data. (Login may required)
-* It is designed for teams depend on the service but not implement the web GUI themselves.
-* It can achieved by URL rewrite.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/discussion/`:quiz_id`/submission/`:submission_id`/view
-
-#### Response
-
-* It should redirect to the URL of the web view for the specified submission
-using 301 (Moved Permanently) with URL in Location Header.
-* If there is any error, display the error page instead.
 
 ### Add Submission for a Quiz
 
@@ -1305,4 +1057,3 @@ exists.
   updated_at: // default is the same as created_at
 }
 ```
-
