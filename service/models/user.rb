@@ -10,6 +10,7 @@ class User
     key :state, String
     key :zip, String
     key :country, String
+    key :student_id, String
 
     def empty?
       self.address.to_s.empty? and self.city.to_s.empty? and
@@ -22,8 +23,8 @@ class User
 
   end
 
-  key :email, String, :required => true
-  key :password, String, :required => true
+  key :email, String, :required => true, :unique => true, :format => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
+  key :password, String, :required => true, :length => 40 # sha-1 hash
   key :first_name, String, :required => true
   key :last_name, String, :required => true
   key :address, Address
@@ -41,6 +42,3 @@ class User
   end
 
 end
-
-User.ensure_index :email, :unique => true
-
