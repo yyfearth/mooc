@@ -23,9 +23,10 @@ class UserController < Controller
       end
     end
 
-    def email_not_matched?(json, email = @email || param[:email])
+    def email_not_matched?(json)
+      email = @email || param[:email]
       json_email = json['email']
-      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched #{email} != #{json_email}" if email != json_email
+      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched #{email} != #{json_email}" if json_email && email != json_email
     end
 
   end
