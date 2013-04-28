@@ -7,40 +7,39 @@ class UserController < Controller
 
   helpers do
 
-    def user_not_found?(email, user)
+    def user_not_found?(user = @user, email = @email)
       not_found 'USER_NOT_FOUND', "User with email #{email} is not found" if user.nil?
     end
 
-    def duplicated?(email)
+    def duplicated?(email = @email)
       conflict 'EMAIL_DUPLICATED', "User with email #{email} already exists" if User.find email
     end
 
-    def invalid_email?(email)
+    def invalid_email?(email = @email)
       if email.to_s.empty?
         bad_request 'EMPTY_EMAIL', 'Email is required'
       elsif (EMAIL_REGEX =~ email).nil?
-        bad_request 'INVALID_EMAIL', 'Email is invalid'
+        bad_request 'INVALID_EMAIL', "Email #{email} is invalid"
       end
     end
 
-    def email_not_matched?(params, json)
-      url_email = params[:email]
+    def email_not_matched?(json, email = @email || param[:email])
       json_email = json['email']
-      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched #{url_email} != #{json_email}" if url_email != json_email
+      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched #{email} != #{json_email}" if email != json_email
     end
 
   end
 
   before USER_EMAIL_URL do
-    invalid_email? params[:email]
+    @email = params[:email]
+    invalid_email?
   end
 
   # get a user by email (id)
   get USER_EMAIL_URL do
-    email = params[:email]
-    user = User.find email
-    user_not_found? email, user
-    ok user
+    @user = User.find @email
+    user_not_found?
+    ok @user
   end
 
   # search users
@@ -65,19 +64,18 @@ class UserController < Controller
   # create a new user
   post USERS_URL do
     json = JSON.parse request.body.read
-    email = json['email']
-    invalid_email? email
-    duplicated? email
+    @email = json['email']
+    invalid_email?
+    duplicated?
     created User.create! json
   end
 
   # create/update a user
   put USER_EMAIL_URL do
     json = JSON.parse request.body.read
-    email_not_matched? params, json
-    email = json['email']
-    if User.find email # exists
-      ok User.update email, json
+    email_not_matched? json
+    if User.find @email # exists
+      ok User.update @email, json
     else # not exist
       created User.create! json
     end
@@ -85,11 +83,10 @@ class UserController < Controller
 
   # delete a user by email (id)
   delete USER_EMAIL_URL do
-    email = params[:email]
-    user = User.find email
-    user_not_found? email, user
-    user.destroy
-    ok "User with email #{email} deleted"
+    @user = User.find @email
+    user_not_found?
+    @user.destroy
+    ok "User with email #{@email} deleted"
   end
 
   # FOR DEBUG ONLY
