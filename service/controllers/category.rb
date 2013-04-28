@@ -4,14 +4,17 @@ class CategoryController < EntityController
   ALL_URL = COLLECTION_URL + '/all'
 
   helpers do
-    def invalid_json?(json)
-      no_id_in_json? json
+    def name_duplicated!(json)
+      duplicated! 'name', json['name']
     end
+  end
+
+  before do
+    @entity_name = Category.name
   end
 
   before ID_URL do
     @id = params[:id]
-    @entity_name = Category.class.name
   end
 
   # get a category by id (id)
@@ -23,22 +26,33 @@ class CategoryController < EntityController
 
   # search categories
   get COLLECTION_URL do
-    ok do_search Category, params
+    name = nil
+    name = {:$regex => params[:q]} unless params[:q].to_s.empty?
+    name = params[:name] unless params[:name].to_s.empty?
+    ok do_search Category.where(:name => name), params
   end
 
   # create a new category
-  post ID_URL do
+  post COLLECTION_URL do
     json = JSON.parse request.body.read
-    invalid_json? json
-    created Category.create! json
+    begin
+      created Category.create! json
+    rescue Mongo::OperationFailure => e
+      puts e.inspect
+      name_duplicated! json
+    end
   end
 
   # update a category
   put ID_URL do
     json = JSON.parse request.body.read
-    invalid_json? json
     id_not_matched? json
-    ok Category.update @id, json
+    begin
+      ok Category.update @id, json
+    rescue Mongo::OperationFailure => e
+      puts e.inspect
+      name_duplicated! json
+    end
   end
 
   # delete a category by id (id)

@@ -70,8 +70,12 @@ class EntityController < Controller
 
   helpers do
 
+    def duplicated!(key, value)
+      conflict "#{@entity_name.upcase}_#{key.upcase}_DUPLICATED", "#{@entity_name} with #{key.downcase} '#{value}' already exists"
+    end
+
     def entity_not_found?(entity)
-      not_found @entity_name.upcase + '_NOT_FOUND', @entity_name + " with id #{@id} is not found" if entity.nil?
+      not_found "#{@entity_name.upcase}_NOT_FOUND", "#{@entity_name} with id '#{@id}' is not found" if entity.nil?
     end
 
     def no_id_in_json?(json)
@@ -81,7 +85,7 @@ class EntityController < Controller
     def id_not_matched?(json)
       url_id = @id || params[:id]
       json_id = json['id']
-      bad_request 'ID_NOT_MATCH', "ID in URL is not matched #{url_id} != #{json_id}" if url_id != json_id
+      bad_request 'ID_NOT_MATCH', "ID in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
     end
 
   end
