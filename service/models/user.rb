@@ -18,7 +18,7 @@ class User
   end
 
   def serializable_hash(options = {})
-    super({:except => :id}.merge(options))
+    super({except: :id}.merge(options))
   end
 
 end
