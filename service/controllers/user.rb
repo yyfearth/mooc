@@ -8,25 +8,25 @@ class UserController < Controller
   helpers do
 
     def user_not_found?(user = @user, email = @email)
-      not_found 'USER_NOT_FOUND', "User with email #{email} is not found" if user.nil?
+      not_found 'USER_NOT_FOUND', "User with email '#{email}' is not found" if user.nil?
     end
 
     def duplicated?(email = @email)
-      conflict 'EMAIL_DUPLICATED', "User with email #{email} already exists" if User.find email
+      conflict 'EMAIL_DUPLICATED', "User with email '#{email}' already exists" if User.find email
     end
 
     def invalid_email?(email = @email)
       if email.to_s.empty?
         bad_request 'EMPTY_EMAIL', 'Email is required'
       elsif (EMAIL_REGEX =~ email).nil?
-        bad_request 'INVALID_EMAIL', "Email #{email} is invalid"
+        bad_request 'INVALID_EMAIL', "Email '#{email}' is invalid"
       end
     end
 
     def email_not_matched?(json)
       email = @email || param[:email]
       json_email = json['email']
-      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched #{email} != #{json_email}" if json_email && email != json_email
+      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched '#{email}' != '#{json_email}'" if json_email && email != json_email
     end
 
   end

@@ -27,7 +27,6 @@ class User
   key :first_name, String, :required => true
   key :last_name, String, :required => true
   key :address, Address
-
   timestamps!
 
   before_save do
