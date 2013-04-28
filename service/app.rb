@@ -27,7 +27,6 @@ class App < Sinatra::Application
     MongoMapper.connection.connect
   end
 
-  require 'models/address'
   require 'models/user'
   require 'controllers/base'
   require 'controllers/user'
