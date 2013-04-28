@@ -9,11 +9,15 @@ class CategoryController < EntityController
     end
   end
 
+  before ID_URL do
+    @id = params[:id]
+    @entity_name = Category.class.name
+  end
+
   # get a category by id (id)
   get ID_URL do
-    id = params[:id]
-    category = Category.find_by_id id
-    entity_not_found? Category, id, category,
+    category = Category.find_by_id @id
+    entity_not_found? category
     ok category
   end
 
@@ -33,18 +37,16 @@ class CategoryController < EntityController
   put ID_URL do
     json = JSON.parse request.body.read
     invalid_json? json
-    id_not_matched? params, json
-    id = params[:id]
-    ok Category.update id, json
+    id_not_matched? json
+    ok Category.update @id, json
   end
 
   # delete a category by id (id)
   delete ID_URL do
-    id = params[:id]
-    category = Category.find_by_id id
-    entity_not_found? id, category
+    category = Category.find_by_id @id
+    entity_not_found? category
     category.destroy
-    ok "Category with id #{id} deleted"
+    ok "Category with id #{@id} deleted"
   end
 
   # FOR DEBUG ONLY
