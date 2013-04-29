@@ -87,7 +87,7 @@ class UserController < Controller
     @user = User.find @email
     user_not_found?
     @user.destroy
-    ok "User with email #{@email} deleted"
+    ok "User with email '#{@email}' deleted"
   end
 
   # FOR DEBUG ONLY

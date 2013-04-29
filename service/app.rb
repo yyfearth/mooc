@@ -42,4 +42,7 @@ class App < Sinatra::Application
 
   use UserController
   use CategoryController
+  before { content_type :json }
+  not_found { error 404, {error: 'NOT_FOUND', message: 'Not found'}.to_json }
+
 end

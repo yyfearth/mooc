@@ -56,12 +56,11 @@ class Controller < Sinatra::Base
 
   end
 
-  before do
-    content_type :json
-  end
-
-  not_found do
-    err 404, 'NOT_FOUND', 'Not found'
+  before { content_type :json }
+  not_found { err 404, 'NOT_FOUND', 'Not found' }
+  error do
+    e = env['sinatra.error']
+    err 500, 'UNEXPECTED_ERROR', e.message
   end
 
 end
@@ -70,7 +69,7 @@ class EntityController < Controller
 
   helpers do
 
-    def db_exception(e)
+    def db_exception!(e)
       puts e.inspect # e.backtrace
       matched = /(?<key>\w+) has already been taken/.match e.message
       if matched
@@ -81,11 +80,7 @@ class EntityController < Controller
     end
 
     def entity_not_found?(entity)
-      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} with id '#{@id}' is not found" if entity.nil?
-    end
-
-    def no_id_in_json?(json)
-      bad_request 'NO_ID', 'ID is required in JSON' if json['id'].to_s.empty?
+      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} with ID '#{@id}' is not found" if entity.nil?
     end
 
     def id_not_matched?(json)

@@ -38,7 +38,7 @@ class CategoryController < EntityController
     begin
       created Category.create! json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception e
+      db_exception! e
     end
   end
 
@@ -49,7 +49,7 @@ class CategoryController < EntityController
     begin
       ok Category.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception e
+      db_exception! e
     end
   end
 
@@ -58,7 +58,7 @@ class CategoryController < EntityController
     category = Category.find_by_id @id
     entity_not_found? category
     category.destroy
-    ok "Category with id #{@id} deleted"
+    ok "Category with ID '#{@id}' deleted"
   end
 
   # FOR DEBUG ONLY
