@@ -3,11 +3,8 @@ class CategoryController < EntityController
   COLLECTION_URL = '/categories'
   ALL_URL = COLLECTION_URL + '/all'
 
-  helpers do
-    def name_duplicated!(json)
-      duplicated! 'name', json['name']
-    end
-  end
+  #helpers do
+  #end
 
   before do
     @entity_name = Category.name
@@ -26,10 +23,13 @@ class CategoryController < EntityController
 
   # search categories
   get COLLECTION_URL do
-    name = nil
-    name = {:$regex => params[:q]} unless params[:q].to_s.empty?
-    name = params[:name] unless params[:name].to_s.empty?
-    ok do_search Category.where(:name => name), params
+    q = {}
+    if params[:name] and !params[:name].blank?
+      q[:name] = params[:name]
+    elsif !params[:q].to_s.blank?
+      q[:name] ={:$regex => params[:q]}
+    end
+    ok do_search Category.where(q), params
   end
 
   # create a new category
@@ -37,9 +37,8 @@ class CategoryController < EntityController
     json = JSON.parse request.body.read
     begin
       created Category.create! json
-    rescue Mongo::OperationFailure => e
-      puts e.inspect
-      name_duplicated! json
+    rescue MongoMapper::DocumentNotValid => e
+      db_exception e
     end
   end
 
@@ -49,9 +48,8 @@ class CategoryController < EntityController
     id_not_matched? json
     begin
       ok Category.update @id, json
-    rescue Mongo::OperationFailure => e
-      puts e.inspect
-      name_duplicated! json
+    rescue MongoMapper::DocumentNotValid => e
+      db_exception e
     end
   end
 

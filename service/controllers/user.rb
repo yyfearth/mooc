@@ -16,7 +16,7 @@ class UserController < Controller
     end
 
     def invalid_email?(email = @email)
-      if email.to_s.empty?
+      if email.to_s.blank?
         bad_request 'EMPTY_EMAIL', 'Email is required'
       elsif (EMAIL_REGEX =~ email).nil?
         bad_request 'INVALID_EMAIL', "Email '#{email}' is invalid"

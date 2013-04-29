@@ -33,7 +33,7 @@ class Controller < Sinatra::Base
 
     def err(status_code, error_code, message)
       error status_code, {
-          error: error_code,
+          error: error_code.upcase,
           message: message
       }.to_json
     end
@@ -70,12 +70,18 @@ class EntityController < Controller
 
   helpers do
 
-    def duplicated!(key, value)
-      conflict "#{@entity_name.upcase}_#{key.upcase}_DUPLICATED", "#{@entity_name} with #{key.downcase} '#{value}' already exists"
+    def db_exception(e)
+      puts e.inspect # e.backtrace
+      matched = /(?<key>\w+) has already been taken/.match e.message
+      if matched
+        conflict "#{@entity_name}_#{matched[:key]}_DUPLICATED", e.message
+      else
+        bad_request "INVALID_#{@entity_name}_JSON", e.message
+      end
     end
 
     def entity_not_found?(entity)
-      not_found "#{@entity_name.upcase}_NOT_FOUND", "#{@entity_name} with id '#{@id}' is not found" if entity.nil?
+      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} with id '#{@id}' is not found" if entity.nil?
     end
 
     def no_id_in_json?(json)
