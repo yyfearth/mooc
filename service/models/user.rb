@@ -30,7 +30,7 @@ class User
   key :address, Address
   timestamps!
 
-  before_save do
+  before_create do
     # replace id to email
     self.id = self.email
     # remove address if it is empty
