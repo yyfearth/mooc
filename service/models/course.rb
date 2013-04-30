@@ -27,6 +27,7 @@ class Course
 
   key :title, String, :required => true, :unique => true
   key :description, String, :required => true
+  key :category_id, String, :required => true
   many :participants
   key :status, Symbol, :required => true
   key :created_by, String, :required => true # only email for ref
