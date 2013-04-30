@@ -3,30 +3,23 @@ RESTful API (Draft)
 
 -- Proposed by Wilson (Yufan) Yang <yyfearth@gmail.com>
 
-Use JSON as the format for the body of both request and response.
-
-For all response, there should be a header: `Content-Type: application/json; charset=utf-8`
-
-The RESTful API URL patterns is designed by following the recommendation from the Book: OReilly - Restful Web Services Cookbook (2010).
-
 Some principals I followed:
 
 1. Stateless - no session is stored
 2. Represents as Resources/Services (Nouns) instead of Actions (Verbs)
-3. Use single noun for resource deal with a single entity (e.g. create and search/list), use plural for a set of entities (e.g. get by ID, update and delete)
+3. Use single noun for resource deal with a single entity (e.g. get by ID, update and delete), use  for a set of entities (e.g. create and search/list)
 4. Using lowercase_separated_by_underscores followed the naming convention of Ruby, Python and MongoDB  
 5. Using standard [HTTP Status Code](http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) to indicate the results
 
-Currently, the API is mainly designed for the server-to-server interaction,
-for clients, it should be some additional authentication and authorization needed. 
-Basic Auth and OAuth should be introduced for Access control, but I think we do not have enough time for that.
-
 **Some requirements:**
 
-1. When creating entity, the API must return 201 with created entity’s JSON, and the URL with its ID in the `Location` Header
-2. All get by ID method support GET and HEAD method, when use HEAD it should return the same status code as GET but no content returned
-3. For most entities, use POST to create, PUT to update, GET to query and DELETE to remove
-4. For some APIs does not return entity(ies), it should return a Success JSON to indicate it success, and all exception should return a proper Status Code (400 for Bad Request, 404 for 5. Not Found, 500 for Internal Error, etc.) with a Error JSON.
+1. Use JSON as the format for the body of both request and response.
+2. For all response, there should be a header: `Content-Type: application/json; charset=utf-8`.
+3. When creating entity, the API must return 201 with created entity’s JSON, and the URL with its ID in the `Location` Header.
+4. All get by ID method support GET and HEAD method, while using HEAD it should return the same status code as GET but without content.
+5. For most entities, use POST to create, PUT to update, GET to query and DELETE to remove.
+6. For some APIs does not return entity(ies), it should return a Success JSON to indicate it success, and all exception should return a proper Status Code (400 for Bad Request, 404 for Not Found, 500 for Internal Error, etc.) with a Error JSON.
+7. Search parameter `order_by`, use `field_name.asc/desc`, `asc` by default, e.g. `created_by`, `updated_by.desc`.
 
 **ATTENTION:**
 Since the RESTful API should be only used for Web Server not for Clients (in browser), your web server should take care of all responsibility for security and privacy issues.
@@ -36,7 +29,7 @@ DO NOT ALLOW clients directly access the API without go through your web server.
 
 ## User
 
-### User Validation
+### User Validation (Deprecated)
 
 #### Usage
 
@@ -83,6 +76,27 @@ Status Code | Response Body | Condition
 
 ### Search Users
 
+Method | URL
+-------|----
+GET | http://host:port/user**s**?param=value&...
+
+####Parameters
+
+* All parameters are optional, usually are specified by default.
+
+Parameter | Value | Default
+----------|-------|--------
+created_from/to | The time span for created_at property | -
+updated_from/to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | 20
+order_by | For ordering and paging (use field_name.asc/desc) | id.asc
+
+#### Response
+Status Code | Response Body | Condition
+200 (OK) | User Array JSON | Success
+500 (Internal Server Error) | Error JSON | Other Errors
+
 ### Create User
 
 #### Usage
@@ -109,14 +123,13 @@ Status Code | Response Body | Condition
 #### Usage
 
 * Can be used for both creating and updating user, since the email address is unique.
+* Email cannot be changed since it is the ID
 
 #### Request
 
 Method | URL | Request Body
 -------|-----|-------------
 PUT | http://host:port/user/`:email` | User JSON *
-
-* Password is required for creating new user, but it will be ignored for updating.
 
 #### Response
 
@@ -127,29 +140,7 @@ Status Code | Response Body | Condition
 400 (Bad Request) | Error JSON | Email or JSON is invalid
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Update User Password
-
-#### Usage
-
-* Since update user do not contain password, use this to change user’s password.
-* The password should be always hashed by SHA-1, lower-cased hex string.
-
-#### Request
-
-Method | URL | Request Body
--------|-----|-------------
-PUT | http://host:port/user/`:email`/password | The hashed password
-
-#### Response
-
-Status Code | Response Body | Condition
-------------|---------------|----------
-200 (OK) | User JSON | Update successful
-400 (Bad Request) | Error JSON | Email or password is invalid
-404 (Not Found) | Error JSON | User not found
-500 (Internal Server Error) | Error JSON | Other Errors
-
-### Delete User
+### Delete User (Optional)
 
 #### Request
 
@@ -185,13 +176,28 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Category not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### List All Categories
+### Search Categories
 
 #### Request
 
 Method | URL
 -------|----
 GET | http://host:port/categor**ies**
+
+#### Parameters
+
+* All parameters are optional, usually are specified by default.
+* Return all categories when no parameter is given, since the object is small, and it will not be too many in total.
+
+Parameter | Value | Default
+----------|-------|--------
+q | A part of name | -
+name | Exactly the name | -
+created_from/to | The time span for created_at property | -
+updated_from/to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | **No limit**
+order_by | For ordering and paging (use field_name.asc/desc) | id.asc
 
 ##### Response
 
@@ -216,7 +222,7 @@ Status Code | Response Body | Condition
 409 (Conflict) | Error JSON | Name is duplicated
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Update Category
+### Update Category (Optional)
 
 #### Request
 
@@ -233,7 +239,7 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Category not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Delete Category
+### Delete Category (Optional)
 
 #### Request
 
@@ -281,18 +287,18 @@ GET | http://host:port/course**s**?param=value&...
 
 * All parameters are optional, usually are specified by default. If no parameter is given, return all.
 
-Parameter | Value
-----------|------
-q | A part of title, description, category, etc. (like google search)
-title | Exactly the title
-category_id | Exactly the category
-participant_email | One of the participants’ email
-created_by | Exactly the creator’s email
-created_from/created_to | The time span for created_at property
-updated_from/updated_to | The time span for updated_at property, can be used for Sync
-offset | For paging, the offset index of entity for this return, default 0
-limit | For paging, the numbers of entity for this return, default is unlimited?
-order_by | For ordering and paging, default is order by id
+Parameter | Value | Default
+----------|-------|--------
+q | A part of title, description, category, etc. (like google search) | -
+title | Exactly the title | -
+category_id | Exactly the category | -
+participant_email | One of the participants’ email | -
+created_by | Exactly the creator’s email | -
+created_from/created_to | The time span for created_at property | -
+updated_from/updated_to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | 20
+order_by | For ordering and paging (use field_name.asc/desc) | id.asc
 
 ##### Response
 
@@ -355,7 +361,7 @@ Status Code | Response Body | Condition
 #### Usage
 
 * A shortcut for getting all participants’ user profile, to avoid fetching the participants one by one.
-* It will return all user entities without additionally attribute like role.
+* It will return all user entities **without additionally attribute like role**.
 
 #### Request
 
@@ -374,7 +380,12 @@ Status Code | Response Body | Condition
 
 ### Drop / Enroll Course
 
-* Just update the course entity with course id by adding or removing a user from the participants.
+* For Enroll, just update the course entity with course id by adding a user to the participants.
+* For Drop, it is better to change the status of this participant record to dropped.
+  Or you can simply remove it, depends on your implementation.
+* *Suggest URL for API:*
+  - Enroll: POST http://host:port/course/`:id`/participant**s** with `{email:..., role:..., status:...}`
+  - Drop: DELETE http://host:port/course/`:id`/participant/`:email`
 
 ## Announcement
 
@@ -399,7 +410,8 @@ Status Code | Response Body | Condition
 
 #### Usage
 
-* Search for announcements, at least it should support search by course_id
+* Search for announcements, at least it should support search by `course_id`
+* Support `update_from/to` will enable the ability for synchronize
 
 #### Request
 
@@ -411,16 +423,16 @@ GET | http://host:port/announcement**s**?param=value&...
 
 * All parameters are optional, usually are specified by default. If no parameter is given, return all.
 
-Parameter | Value
-----------|-------
-*course_id* | **Required**, exactly the course id (to support announcement without course_id, use “none”)
-title | Exactly the title
-created_by | Exactly the creator’s email
-created_from/to | The time span for created_at property
-updated_from/to | The time span for updated_at property, can be used for Sync
-offset | For paging, the offset index of entity for this return, default 0
-limit | For paging, the numbers of entity for this return, default is unlimited?
-order_by | For ordering and paging, default is order by id
+Parameter | Value | Default
+----------|-------|--------
+*course_id* | **Required**, exactly the course id (to support announcement without course_id, use “none”) | -
+title | Exactly the title | -
+created_by | Exactly the creator’s email | -
+created_from/to | The time span for created_at property | -
+updated_from/to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | 20
+order_by | For ordering and paging (use field_name.asc/desc) | id.asc
 
 ##### Response
 
@@ -484,9 +496,27 @@ Status Code | Response Body | Condition
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
+Method | URL
+-------|-----
 GET | http://host:port/discussion/`:id`
+
+#### Response
+
+Status Code | Response Body | Condition
+------------|---------------|----------
+200 (OK) | Discussion JSON | Success
+400 (Bad Request) | Error JSON | ID is invalid
+404 (Not Found) | Error JSON | Discussion not found
+500 (Internal Server Error) | Error JSON | Other Errors
+
+### Get Discussion by Course ID
+
+#### Request
+
+Method | URL
+-------|-----
+GET | http://host:port/discussion/course/`:course_id`
+GET | http://host:port/course/`:course_id`/discussion
 
 #### Response
 
@@ -507,25 +537,25 @@ Status Code | Response Body | Condition
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
+Method | URL
+-------|----
 GET | http://host:port/discussion**s**?param=value&...
 
 ##### Parameters
 
-* All parameters are optional, usually are specified by default. If no parameter is given, return all.
+* All parameters are optional, usually are specified by default.
 
-Parameter | Value
-----------|-------
-q | A part of title, description, course name (like google search)
-course_id | Exactly the course id (to support discussion without course_id, use “none”)
-title | Exactly the title
-created_by | Exactly the creator’s email
-created_from/to | The time span for created_at property
-updated_from/to | The time span for updated_at property, can be used for Sync
-offset | For paging, the offset index of entity for this return, default 0
-limit | For paging, the numbers of entity for this return, default is unlimited?
-order_by | For ordering and paging, default is order by id
+Parameter | Value | Default
+----------|-------|--------
+q | A part of title, description, course name (like google search) | -
+course_id | Exactly the course id (to support discussion without course_id, use “none”) | -
+title | Exactly the title | -
+created_by | Exactly the creator’s email | -
+created_from/to | The time span for created_at property | -
+updated_from/to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | 20
+order_by | For ordering and paging | id.asc
 
 ##### Response
 
@@ -566,12 +596,12 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Discussion not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Delete Discussion
+### Delete Discussion (Optional)
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
+Method | URL
+-------|----
 DELETE | http://host:port/discussion/`:id`
 
 #### Response
@@ -591,21 +621,21 @@ Status Code | Response Body | Condition
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
-GET | http://host:port/discussion/`:id`/messages?params...
+Method | URL
+-------|----
+GET | http://host:port/discussion/`:discussion_id`/messages?params...
 
 ##### Parameters
 
-* All parameters are optional, usually are specified by default. If no parameter is given, return all.
+* All parameters are optional, usually are specified by default.
 
 Parameter | Value
 ----------|------
-created_from/to | The time span for created_at property
-updated_from/to | The time span for updated_at property, can be used for Sync
-offset | For paging, the offset index of entity for this return, default 0
-limit | For paging, the numbers of entity for this return, default is unlimited?
-order_by | For ordering and paging, default is order by id or created_at?
+created_from/to | The time span for created_at property | -
+updated_from/to | The time span for updated_at property, can be used for Sync | -
+offset | For paging, the offset index of entity for this return | 0
+limit | For paging, the numbers of entity for this return | 20
+order_by | For ordering and paging | id.asc or created_at.desc?
 
 #### Response
 
@@ -648,7 +678,7 @@ Status Code | Response Body | Condition
 201 (Created) | Message JSON w/ ID | Success
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Update Message of a Discussion
+### Update Message of a Discussion (Optional)
 
 #### Request
 
@@ -665,7 +695,7 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Discussion not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Delete Message from a Discussion
+### Delete Message from a Discussion (Optional)
 
 #### Request
 
@@ -789,7 +819,7 @@ created_from/to | The time span for created_at property | from: not specified, t
 updated_from/to | The time span for updated_at property, can be used for Sync | from: not specified, to: now
 offset | For paging, the offset index of entity for this return | 0
 limit | For paging, the numbers of entity for this return | unlimited?
-order_by | For ordering and paging (use +/- to indicate ASC/DESC, + by default) | order by id or created_at?
+order_by | For ordering and paging (use +/- to indicate ASC/DESC, + by default) | id.asc or created_at.desc?
 
 #### Response
 
@@ -832,7 +862,7 @@ Status Code | Response Body | Condition
 201 (Created) | Submission JSON w/ ID | Success
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Update Submission for a Quiz
+### Update Submission for a Quiz (Optional)
 
 #### Request
 
@@ -873,7 +903,7 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Quiz not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Delete Submission from a Quiz
+### Delete Submission from a Quiz (Optional)
 
 #### Request
 
@@ -913,7 +943,7 @@ exists.
 ```
 {
   ok: "OK"
-  message: "Category w/ ID ... is deleted" // the readable message
+  message: "Category ... is deleted" // the readable message
 }
 ```
 
@@ -925,7 +955,7 @@ exists.
 ```
 {
   error: "USER_NOT_FOUND" // The error code
-  message: ""Cannot find user with email xxxxxx@xx.xxx" // the readable error message
+  message: "Cannot find user 'xxxxxx@xx.xxx'" // the readable error message
 }
 ```
 
@@ -1029,6 +1059,7 @@ exists.
 ```
 {
   id
+  course_id
   title: (optional)
   description: (optional)
   questions:[{ // Question 1..*
@@ -1050,6 +1081,7 @@ exists.
 {
   id
   quiz_id
+  note: // some comments
   score: // grading the submission for the quiz
   answers: [0,1,2,...] // for each question, keep same sequence
   created_by: // user email
