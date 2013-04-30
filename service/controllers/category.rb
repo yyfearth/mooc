@@ -3,14 +3,8 @@ class CategoryController < EntityController
   COLLECTION_URL = '/categories'
   ALL_URL = COLLECTION_URL + '/all'
 
-  #helpers do
-  #end
-
-  before do
-    @entity_name = Category.name
-  end
-
   before ID_URL do
+    @entity_name = Category.name
     @id = params[:id]
   end
 
@@ -23,13 +17,9 @@ class CategoryController < EntityController
 
   # search categories
   get COLLECTION_URL do
-    q = {}
-    if params[:name] and !params[:name].blank?
-      q[:name] = params[:name]
-    elsif !params[:q].to_s.blank?
-      q[:name] ={:$regex => params[:q]}
-    end
-    ok do_search Category.where(q), params
+    # no limit by default
+    params[:limit] = -1 if params[:limit].to_s.empty?
+    ok do_search Category, params, [:name]
   end
 
   # create a new category
@@ -38,7 +28,7 @@ class CategoryController < EntityController
     begin
       created Category.create! json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception! e
+      invalid_entity! e
     end
   end
 
@@ -49,7 +39,7 @@ class CategoryController < EntityController
     begin
       ok Category.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception! e
+      invalid_entity! e
     end
   end
 

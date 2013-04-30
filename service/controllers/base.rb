@@ -1,21 +1,45 @@
-class Controller < Sinatra::Base
+class EntityController < Sinatra::Base
+  DUP_MSG = 'has already been taken'
+
   helpers do
 
-    def do_search(collection, params)
+    def do_search(collection, params, keys = [])
+      query = {}
+      unless keys.empty?
+        q = params[:q].to_s.blank? ? nil : /#{params[:q]}/i
+        keys.each { |key| query[key] = params[key].to_s.blank? ? q : params[key] }
+      end
+      query[:created_at.gte] = Time.parse(params[:created_from]) unless params[:created_from].to_s.empty?
+      query[:created_at.lte] = Time.parse(params[:created_to]) unless params[:created_to].to_s.empty?
+      query[:updated_at.gte] = Time.parse(params[:updated_from]) unless params[:updated_from].to_s.empty?
+      query[:updated_at.lte] = Time.parse(params[:updated_to]) unless params[:updated_to].to_s.empty?
       offset = params[:offset] || 0
       limit = params[:limit] || 20
       order_by = params[:order_by] || :created_by.desc
-      created_from = params[:created_from]
-      created_to = params[:created_to]
-      updated_from = params[:updated_from]
-      updated_to = params[:updated_to]
-      where = {}
-      where[:created_at.gte] = Time.parse(created_from) unless created_from.to_s.empty?
-      where[:created_at.lte] = Time.parse(created_to) unless created_to.to_s.empty?
-      where[:updated_at.gte] = Time.parse(updated_from) unless updated_from.to_s.empty?
-      where[:updated_at.lte] = Time.parse(updated_to) unless updated_to.to_s.empty?
-      collection.where(where).order(order_by).offset(offset).limit(limit)
+      collection.where(query).order(order_by).offset(offset).limit(limit)
     end
+
+    def invalid_entity!(e)
+      puts e.inspect, e.backtrace
+      matched = /\b(?<key>\w+)(?: '.+?')? #{DUP_MSG}/.match e.message
+      if matched
+        conflict "#{matched[:key]}_DUPLICATED", e.message
+      else
+        bad_request 'INVALID_DOCUMENT', e.message
+      end
+    end
+
+    def entity_not_found?(entity = @entity, id = @id)
+      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} '#{id}' is not found" if entity.nil?
+    end
+
+    def id_not_matched?(json)
+      url_id = @id || params[:id]
+      json_id = json['id']
+      bad_request 'ID_NOT_MATCH', "Id in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
+    end
+
+    ### results
 
     def created(entity, path = "/#{entity.class.name.downcase}/#{entity.id}")
       status 201
@@ -61,34 +85,6 @@ class Controller < Sinatra::Base
   error do
     e = env['sinatra.error']
     err 500, 'UNEXPECTED_ERROR', e.message
-  end
-
-end
-
-class EntityController < Controller
-
-  helpers do
-
-    def db_exception!(e)
-      puts e.inspect # e.backtrace
-      matched = /(?<key>\w+) has already been taken/.match e.message
-      if matched
-        conflict "#{@entity_name}_#{matched[:key]}_DUPLICATED", e.message
-      else
-        bad_request "INVALID_#{@entity_name}_JSON", e.message
-      end
-    end
-
-    def entity_not_found?(entity)
-      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} with ID '#{@id}' is not found" if entity.nil?
-    end
-
-    def id_not_matched?(json)
-      url_id = @id || params[:id]
-      json_id = json['id']
-      bad_request 'ID_NOT_MATCH', "ID in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
-    end
-
   end
 
 end

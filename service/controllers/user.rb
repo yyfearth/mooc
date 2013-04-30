@@ -1,4 +1,4 @@
-class UserController < Controller
+class UserController < EntityController
 
   USER_EMAIL_URL = '/user/:email'
   USERS_URL = '/users'
@@ -8,11 +8,8 @@ class UserController < Controller
   helpers do
 
     def user_not_found?(user = @user, email = @email)
-      not_found 'USER_NOT_FOUND', "User with email '#{email}' is not found" if user.nil?
-    end
-
-    def duplicated?(email = @email)
-      conflict 'EMAIL_DUPLICATED', "User with email '#{email}' already exists" if User.find email
+      @entity_name = User.name
+      entity_not_found? user, email
     end
 
     def invalid_email?(email = @email)
@@ -67,18 +64,25 @@ class UserController < Controller
     json = JSON.parse request.body.read
     @email = json['email']
     invalid_email?
-    duplicated?
-    created User.create! json
+    begin
+      created User.create! json
+    rescue MongoMapper::DocumentNotValid => e
+      invalid_entity! e
+    end
   end
 
   # create/update a user
   put USER_EMAIL_URL do
     json = JSON.parse request.body.read
     email_not_matched? json
-    if User.find @email # exists
-      ok User.update @email, json
-    else # not exist
-      created User.create! json
+    begin
+      if User.find @email # exists
+        ok User.update @email, json
+      else # not exist
+        created User.create! json
+      end
+    rescue MongoMapper::DocumentNotValid => e
+      invalid_entity! e
     end
   end
 

@@ -3,14 +3,8 @@ class CourseController < EntityController
   COLLECTION_URL = '/courses'
   ALL_URL = COLLECTION_URL + '/all'
 
-  #helpers do
-  #end
-
-  before do
-    @entity_name = Course.name
-  end
-
   before ID_URL do
+    @entity_name = Category.name
     @id = params[:id]
   end
 
@@ -23,13 +17,13 @@ class CourseController < EntityController
 
   # search courses
   get COLLECTION_URL do
-    q = {}
-    if params[:name] and !params[:name].blank?
-      q[:name] = params[:name]
-    elsif !params[:q].to_s.blank?
-      q[:name] ={:$regex => params[:q]}
+    keys = [:title, :category_id, :participant_email, :created_by]
+    q = params[:q].to_s.blank? ? nil : {:$regex => params[:q]}
+    query = {}
+    keys.each do |key|
+      query[key] = params[key].to_s.blank? ? q : params[key]
     end
-    ok do_search Course.where(q), params
+    ok do_search Course.where(query), params
   end
 
   # create a new course
@@ -38,7 +32,7 @@ class CourseController < EntityController
     begin
       created Course.create! json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception! e
+      invalid_entity! e
     end
   end
 
@@ -49,7 +43,7 @@ class CourseController < EntityController
     begin
       ok Course.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      db_exception! e
+      invalid_entity! e
     end
   end
 

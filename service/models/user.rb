@@ -13,8 +13,8 @@ class User
     key :student_id, String
 
     def empty?
-      self.address.to_s.empty? and self.city.to_s.empty? and
-          self.state.to_s.empty? and self.zip.to_s.empty? and self.country.to_s.empty?
+      self.address.to_s.empty? && self.city.to_s.empty? &&
+          self.state.to_s.empty? && self.zip.to_s.empty? && self.country.to_s.empty?
     end
 
     def serializable_hash(options = {})
@@ -23,18 +23,33 @@ class User
 
   end
 
-  key :email, String, :required => true, :unique => true, :format => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
+  key :email, String,
+      :required => true,
+      :unique => true,
+      :case_sensitive => false,
+      :format => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
   key :password, String, :required => true, :length => 40 # sha-1 hash
   key :first_name, String, :required => true
   key :last_name, String, :required => true
   key :address, Address
   timestamps!
 
+  DUP_MSG = 'has already been taken'
+
+  before_validation do
+    self.email = self.email.downcase # ignore case
+    # check duplication
+    #if User.find self.email
+    #  self.errors.add :email, :taken, :message => "'#{self.email}' #{DUP_MSG}"
+    #  raise MongoMapper::DocumentNotValid.new self
+    #end
+  end
+
   before_create do
     # replace id to email
     self.id = self.email
     # remove address if it is empty
-    self.address = nil if self.address.nil? and self.address.empty?
+    self.address = nil if self.address.nil? && self.address.empty?
   end
 
   def serializable_hash(options = {})
