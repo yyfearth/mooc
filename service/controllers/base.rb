@@ -3,11 +3,14 @@ class EntityController < Sinatra::Base
 
   helpers do
 
-    def do_search(collection, params, keys = [])
+    def do_search(collection, params, options = {})
       query = {}
-      unless keys.empty?
-        q = params[:q].to_s.blank? ? nil : /#{params[:q]}/i
-        keys.each { |key| query[key] = params[key].to_s.blank? ? q : params[key] }
+      unless options[:fields].to_a.empty?
+        options[:fields].each { |field| query[field] = params[field] unless params[field].to_s.blank? }
+      end
+      unless options[:q].to_a.empty? || params[:q].to_s.blank?
+        q = /#{params[:q]}/i
+        query[:$or] = options[:q].map { |field| {field => q} }
       end
       query[:created_at.gte] = Time.parse(params[:created_from]) unless params[:created_from].to_s.empty?
       query[:created_at.lte] = Time.parse(params[:created_to]) unless params[:created_to].to_s.empty?
@@ -19,8 +22,11 @@ class EntityController < Sinatra::Base
       collection.where(query).order(order_by).offset(offset).limit(limit)
     end
 
+
+    ### validation
+
     def invalid_entity!(e)
-      puts e.inspect, e.backtrace
+      puts e.inspect #, e.backtrace
       matched = /\b(?<key>\w+)(?: '.+?')? #{DUP_MSG}/.match e.message
       if matched
         conflict "#{matched[:key]}_DUPLICATED", e.message

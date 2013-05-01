@@ -18,8 +18,8 @@ class CategoryController < EntityController
   # search categories
   get COLLECTION_URL do
     # no limit by default
-    params[:limit] = -1 if params[:limit].to_s.empty?
-    ok do_search Category, params, [:name]
+    params[:limit] = 0 if params[:limit].to_s.empty?
+    ok do_search Category, params, fields: [:name], q: [:name]
   end
 
   # create a new category

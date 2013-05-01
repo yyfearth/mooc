@@ -17,13 +17,9 @@ class CourseController < EntityController
 
   # search courses
   get COLLECTION_URL do
-    keys = [:title, :category_id, :participant_email, :created_by]
-    q = params[:q].to_s.blank? ? nil : {:$regex => params[:q]}
-    query = {}
-    keys.each do |key|
-      query[key] = params[key].to_s.blank? ? q : params[key]
-    end
-    ok do_search Course.where(query), params
+    ok do_search Course, params,
+                 fields: [:title, :category_id, :participant_email, :created_by],
+                 q: [:title, :category_id, :description]
   end
 
   # create a new course
