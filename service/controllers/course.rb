@@ -3,7 +3,7 @@ class CourseController < EntityController
   COLLECTION_URL = '/courses'
   ALL_URL = COLLECTION_URL + '/all'
 
-  before ID_URL do
+  before "#{ID_URL}*" do
     @entity_name = Category.name
     @id = params[:id]
   end
@@ -13,6 +13,31 @@ class CourseController < EntityController
     course = Course.find_by_id @id
     entity_not_found? course
     ok course
+  end
+
+  # get category of a course
+  get "#{ID_URL}/category" do
+    course = Course.find_by_id @id
+    entity_not_found? course
+    redirect to('/category/' + course.category_id), 301
+  end
+
+  # get category of a course
+  get "#{ID_URL}/participants" do
+    show_dropped = is_param_on? :with_dropped
+    course = Course.find_by_id @id
+    entity_not_found? course
+    participants = {} # hash index
+    course.participants.each do |p|
+      if show_dropped || p.status != :DROPPED
+        participants[p.email] = p.serializable_hash
+      end
+    end
+    users = User.find participants.keys
+    participants = users.map do |u|
+      u.serializable_hash.merge participants[u.email]
+    end
+    ok participants
   end
 
   # search courses

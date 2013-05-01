@@ -22,6 +22,9 @@ class EntityController < Sinatra::Base
       collection.where(query).order(order_by).offset(offset).limit(limit)
     end
 
+    def is_param_on?(name)
+      !params[name].to_s[/true|yes|on|1/i].nil?
+    end
 
     ### validation
 
