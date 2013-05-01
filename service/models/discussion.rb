@@ -1,4 +1,4 @@
-class Disussion
+class Discussion
   include MongoMapper::Document
   safe
 
