@@ -24,13 +24,13 @@ class User
   end
 
   key :email, String,
-      :required => true,
-      :unique => true,
-      :case_sensitive => false,
-      :format => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
-  key :password, String, :required => true, :length => 40 # sha-1 hash
-  key :first_name, String, :required => true
-  key :last_name, String, :required => true
+      required: true,
+      unique: true,
+      case_sensitive: false,
+      format: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
+  key :password, String, required: true, length: 40 # sha-1 hash
+  key :first_name, String, required: true
+  key :last_name, String, required: true
   key :address, Address
   timestamps!
 
@@ -38,11 +38,6 @@ class User
 
   before_validation do
     self.email = self.email.downcase # ignore case
-    # check duplication
-    #if User.find self.email
-    #  self.errors.add :email, :taken, :message => "'#{self.email}' #{DUP_MSG}"
-    #  raise MongoMapper::DocumentNotValid.new self
-    #end
   end
 
   before_create do

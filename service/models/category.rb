@@ -3,9 +3,9 @@ class Category
   safe
 
   key :name, String,
-      :required => true,
-      :unique => true,
-      :case_sensitive => false
+      required: true,
+      unique: true,
+      case_sensitive: false
   timestamps!
 
   DUP_MSG = 'has already been taken'
@@ -15,7 +15,7 @@ class Category
     self.id = self.name.downcase.gsub /\s/, '_'
     # check duplication
     if Category.find self.id
-      self.errors.add :id, :taken, :message => "'#{self.id}' #{DUP_MSG}"
+      self.errors.add :id, :taken, message: "'#{self.id}' #{DUP_MSG}"
       raise MongoMapper::DocumentNotValid.new self
     end
   end
