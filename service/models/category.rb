@@ -4,8 +4,7 @@ class Category
 
   key :name, String,
       required: true,
-      unique: true,
-      case_sensitive: false
+      unique: true
   timestamps!
 
   DUP_MSG = 'has already been taken'
@@ -22,4 +21,4 @@ class Category
 
 end
 
-#Category.ensure_index name: 1
+Category.ensure_index :name, unique: true

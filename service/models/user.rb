@@ -26,9 +26,12 @@ class User
   key :email, String,
       required: true,
       unique: true,
-      case_sensitive: false,
+      length: 255,
       format: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
-  key :password, String, required: true, length: 40 # sha-1 hash
+  key :password, String,
+      required: true,
+      length: 40,
+      format: /\A[0-9a-f]{40}\Z/ # sha-1 hash
   key :first_name, String, required: true
   key :last_name, String, required: true
   key :address, Address
@@ -53,4 +56,4 @@ class User
 
 end
 
-#User.ensure_index email: 1
+User.ensure_index :email, unique: true
