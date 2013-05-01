@@ -36,15 +36,18 @@ class App < Sinatra::Application
   require 'models/user'
   require 'models/category'
   require 'models/course'
+  require 'models/announcement'
   # controllers
   require 'controllers/base'
   require 'controllers/user'
   require 'controllers/category'
   require 'controllers/course'
+  require 'controllers/announcement'
 
   use UserController
   use CategoryController
   use CourseController
+  use AnnouncementController
 
   before { content_type :json }
   not_found { error 404, {error: 'NOT_FOUND', message: 'Not found'}.to_json }
