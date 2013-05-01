@@ -42,8 +42,10 @@ class CourseController < EntityController
 
   # search courses
   get COLLECTION_URL do
+    p_email = params[:participant_email]
+    params[:'participants.email'] = p_email unless p_email.to_s.empty?
     ok do_search Course, params,
-                 fields: [:title, :category_id, :participant_email, :created_by],
+                 fields: [:title, :category_id, :'participants.email', :created_by],
                  q: [:title, :category_id, :description]
   end
 
