@@ -76,7 +76,7 @@ class EntityController < Sinatra::Base
     end
 
     def not_found(error_code, message)
-      err 400, error_code, message
+      err 404, error_code, message
     end
 
     def bad_request(error_code, message)
