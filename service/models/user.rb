@@ -52,3 +52,5 @@ class User
   end
 
 end
+
+#User.ensure_index email: 1

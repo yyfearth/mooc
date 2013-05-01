@@ -37,3 +37,6 @@ class Course
   end
 
 end
+
+Course.ensure_index title: 1
+Course.ensure_index 'participants.email'.to_sym => 1

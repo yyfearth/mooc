@@ -21,3 +21,5 @@ class Category
   end
 
 end
+
+#Category.ensure_index name: 1
