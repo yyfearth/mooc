@@ -91,7 +91,7 @@ class UserController < EntityController
     @user = User.find @email
     user_not_found?
     @user.destroy
-    ok "User with email '#{@email}' deleted"
+    ok "User '#{@email}' deleted"
   end
 
   # FOR DEBUG ONLY

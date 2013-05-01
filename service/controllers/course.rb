@@ -8,7 +8,7 @@ class CourseController < EntityController
     @id = params[:id]
   end
 
-  # get a course by id (id)
+  # get a course by id
   get ID_URL do
     course = Course.find_by_id @id
     entity_not_found? course
@@ -75,7 +75,7 @@ class CourseController < EntityController
     course = Course.find_by_id @id
     entity_not_found? course
     course.destroy
-    ok "Course with ID '#{@id}' deleted"
+    ok "Course '#{@id}' deleted"
   end
 
   # FOR DEBUG ONLY

@@ -8,7 +8,7 @@ class CategoryController < EntityController
     @id = params[:id]
   end
 
-  # get a category by id (id)
+  # get a category by id
   get ID_URL do
     category = Category.find_by_id @id
     entity_not_found? category
@@ -48,7 +48,7 @@ class CategoryController < EntityController
     category = Category.find_by_id @id
     entity_not_found? category
     category.destroy
-    ok "Category with ID '#{@id}' deleted"
+    ok "Category '#{@id}' deleted"
   end
 
   # FOR DEBUG ONLY
