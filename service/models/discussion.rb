@@ -9,7 +9,6 @@ class Discussion
   key :title, String, {require: true}
   key :created_by, String, {require: true}
   key :created_at, Time, {require: true, default: Time.now}
-  key :update_at, Time, {require: true, default: Time.now}
   key :message_ids, Array
   timestamps!
 
