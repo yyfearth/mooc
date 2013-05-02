@@ -29,7 +29,7 @@ class EntityController < Sinatra::Base
     ### validation
 
     def invalid_entity!(e)
-      puts e.inspect #, e.backtrace
+      warn e.inspect #, e.backtrace
       matched = /\b(?<key>\w+)(?: '.+?')? #{DUP_MSG}/.match e.message
       if matched
         conflict "#{matched[:key]}_DUPLICATED", e.message
