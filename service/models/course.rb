@@ -21,7 +21,7 @@ class Course
   key :description, String, required: true
   key :category_id, String, required: true
   many :participants
-  key :status, Symbol, default: :OPENED, in: [:OPENED, :CLOSED, :DELETED]
+  key :status, Symbol, default: :OPENED #, in: [:OPENED, :CLOSED, :DELETED]
   key :created_by, String, required: true # only email for ref
   key :updated_by, String # only email for ref
   timestamps!
