@@ -4,8 +4,8 @@ class Participant
   include MongoMapper::EmbeddedDocument
 
   key :email, String, required: true
-  key :role, Symbol, default: :STUDENT, in: [:STUDENT, :INSTRUCTOR, :OWNER, :ASSISTANT, :GUEST]
-  key :status, Symbol, default: :ENROLLED, in: [:ENROLLED, :DROPPED]
+  key :role, Symbol, default: :STUDENT #, in: [:STUDENT, :INSTRUCTOR, :OWNER, :ASSISTANT, :GUEST]
+  key :status, Symbol, default: :ENROLLED #, in: [:ENROLLED, :DROPPED]
 
   def serializable_hash(options = {})
     super({except: :id}.merge(options))
