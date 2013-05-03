@@ -19,14 +19,14 @@ class AnnouncementController < EntityController
   # get a announcement by id
   get ID_URL do
     announcement = Announcement.find_by_id @id
-    entity_not_found? announcement
+    not_found_if_nil announcement
     ok announcement
   end
 
   # get course of a announcement
   get "#{ID_URL}/course" do
     announcement = Announcement.find_by_id @id
-    entity_not_found? announcement
+    not_found_if_nil announcement
     if announcement.course_id
       redirect to('/course/' + announcement.course_id), 301
     else
@@ -55,7 +55,7 @@ class AnnouncementController < EntityController
     begin
       created Announcement.create! json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
@@ -66,14 +66,14 @@ class AnnouncementController < EntityController
     begin
       ok Announcement.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
   # delete a announcement by id (id)
   delete ID_URL do
     announcement = Announcement.find_by_id @id
-    entity_not_found? announcement
+    not_found_if_nil announcement
     announcement.destroy
     ok "Announcement '#{@id}' deleted"
   end
