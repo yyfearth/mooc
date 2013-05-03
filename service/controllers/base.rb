@@ -10,7 +10,12 @@ class EntityController < Sinatra::Base
       end
       unless options[:q].to_a.empty? || params[:q].to_s.blank?
         q = /#{params[:q]}/i
-        query[:$or] = options[:q].map { |field| {field => q} }
+        fields = options[:q]
+        if fields.length > 1
+          query[:$or] = options[:q].map { |field| {field => q} }
+        elsif query[fields[0]].to_s.blank?
+          query[fields[0]] = q
+        end
       end
       query[:created_at.gte] = Time.parse(params[:created_from]) unless params[:created_from].to_s.empty?
       query[:created_at.lte] = Time.parse(params[:created_to]) unless params[:created_to].to_s.empty?
@@ -90,7 +95,7 @@ class EntityController < Sinatra::Base
   end
 
   before { content_type :json }
-  not_found { err 404, 'NOT_FOUND', 'Not found' }
+  # not_found { err 404, 'NOT_FOUND', 'Not found' }
   error do
     e = env['sinatra.error']
     err 500, 'UNEXPECTED_ERROR', e.message
