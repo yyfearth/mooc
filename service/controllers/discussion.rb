@@ -5,23 +5,9 @@ class DiscussionController < EntityController
   SINGLE_URL = '/discussion'
   MULTIPLE_URL = '/discussions'
   GET_BY_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
-  ADD_DISCUSSION_URL = '/discussion'
 
   @entity = Discussion.name
   @entity_name = Discussion.name
-
-  # Store the request JSON globally.
-  before '*' do
-    begin
-      request_content = request.body.read
-      puts request_content.empty? ? 'No content' : 'Request content = ' << request_content
-      @json = JSON.parse(request_content) unless request_content.to_s.empty?
-    rescue JSON::ParserError => e
-      warn e.backtrace[0]
-      warn e.inspect
-      err 400, 'BAD_REQUEST', 'Cannot parse the request data' if request_content
-    end
-  end
 
   # Store the id globally.
   [GET_BY_COURSE_URLS, SINGLE_ID_URL].each do |url|

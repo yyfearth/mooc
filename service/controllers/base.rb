@@ -165,6 +165,19 @@ class EntityController < Sinatra::Base
     end
   end
 
+  # Store the request JSON globally.
+  before '*' do
+    begin
+      request_content = request.body.read
+      puts request_content.empty? ? 'No content' : 'Request content = ' << request_content
+      @json = JSON.parse(request_content) unless request_content.to_s.empty?
+    rescue JSON::ParserError => e
+      warn e.backtrace[0]
+      warn e.inspect
+      err 400, 'BAD_REQUEST', 'Cannot parse the request data' if request_content
+    end
+  end
+
   before { content_type :json }
 
   # FIXME: not sure why the following doesn't work.
