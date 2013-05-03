@@ -25,7 +25,7 @@ class EntityController < Sinatra::Base
     #   }
     #
     #   options = {
-    #     :q => [:title],
+    #     :q => [:title, :name],
     #     :fields => {
     #       :age.gte => 18,
     #       :gender => 'male',
@@ -36,7 +36,7 @@ class EntityController < Sinatra::Base
     #     :age.gte => 18,
     #     :gender => 'male',
     #     :title => 'dr',
-    #     :$or => [{:title => /test/i}]
+    #     :$or => [{:title => /test/i}, {:name => /test/i}]
     #     :$created_at.gte => '2013-05-03T08:32:34-07:00',
     #   }
     #   ```
@@ -88,26 +88,26 @@ class EntityController < Sinatra::Base
 
     ### validation
 
-    def invalid_entity(e)
+    def invalid_entity!(e)
       warn e.inspect #, e.backtrace
       matched = /\b(?<key>\w+)(?: '.+?')? #{DUPLICATE_MESSAGE}/.match e.message
       if matched
-        conflict "#{matched[:key]}_DUPLICATED", e.message
+        conflict! "#{matched[:key]}_DUPLICATED", e.message
       else
-        bad_request 'INVALID_DOCUMENT', e.message
+        bad_request! 'INVALID_DOCUMENT', e.message
       end
     end
 
     # halt and return not found error json when the given entity is nil
-    def not_found_if_nil(entity = @entity, id = @id)
-      not_found("#{@entity_name}_NOT_FOUND", "#{@entity_name} '#{id}' is not found") if entity.nil?
+    def not_found_if_nil!(entity = @entity, id = @id)
+      not_found!("#{@entity_name}_NOT_FOUND", "#{@entity_name} '#{id}' is not found") if entity.nil?
     end
 
     # halt and return id not match error json when the id in given json and params of url is not the same
-    def id_not_matched?(json)
+    def bad_request_if_id_not_match!(json)
       url_id = @id || params[:id]
       json_id = json['id']
-      bad_request 'ID_NOT_MATCH', "Id in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
+      bad_request! 'ID_NOT_MATCH', "Id in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
     end
 
     ### results
@@ -120,12 +120,12 @@ class EntityController < Sinatra::Base
       entity.to_json
     end
 
-    # return ok 200 with entity json or ok json
+    # return ok 200 with entity json or ok json without halt
     # ok json is a json with a message to indicate a operation is done successfully without return entity json
     def ok(entity)
-      if entity.is_a? String # if a string is given, halt and return a ok json
-        halt({ok: 'OK', message: entity}.to_json)
-      else # if an object (entity/ies) is given, then return the json without halt
+      if entity.is_a? String # if a string is given, then return the ok json
+        {ok: 'OK', message: entity}.to_json
+      else # if an object (entity/ies) is given, then return the json
         entity.to_json
       end
     end
@@ -134,7 +134,7 @@ class EntityController < Sinatra::Base
     # status_code: the http status code, e.g. 400, 500
     # error_code: the string code for the specified error, e.g. USER_NOT_FOUND
     # message: a readable message that detailed described the error
-    def err(status_code, error_code, message)
+    def error!(status_code, error_code, message)
       error status_code, {
           error: error_code.upcase,
           message: message
@@ -143,30 +143,25 @@ class EntityController < Sinatra::Base
 
     # shortcuts for err
 
-    def internal_error(error_code, message)
-      err 500, error_code, message
+    def internal_error!(error_code = 'UNEXPECTED_ERROR', message)
+      error! 500, error_code, message
     end
 
-    def id_not_found(class_name, id)
-      json = {error: 'NOT_FOUND', message: "Cannot find a #{class_name} where id = #{id}"}.to_json
-      error 404, json
+    def not_found!(error_code = 'NOT_FOUND', message)
+      error! 404, error_code, message
     end
 
-    def not_found(error_code = 'NOT_FOUND', message)
-      err(404, error_code, message)
+    def bad_request!(error_code = 'BAD_REQUEST', message)
+      error! 400, error_code, message
     end
 
-    def bad_request(error_code = 'BAD_REQUEST', message)
-      err 400, error_code, message
-    end
-
-    def conflict(error_code, message)
-      err 409, error_code, message
+    def conflict!(error_code = 'CONFLICT', message)
+      error! 409, error_code, message
     end
   end
 
   # Store the request JSON globally.
-  before '*' do
+  before :request_method => [:post, :put] do
     begin
       request_content = request.body.read
       puts request_content.empty? ? 'No content' : 'Request content = ' << request_content
@@ -174,28 +169,22 @@ class EntityController < Sinatra::Base
     rescue JSON::ParserError => e
       warn e.backtrace[0]
       warn e.inspect
-      err 400, 'BAD_REQUEST', 'Cannot parse the request data' if request_content
+      error! 400, 'BAD_REQUEST', 'Cannot parse the request data' if request_content
     end
   end
 
   before { content_type :json }
 
-  # FIXME: not sure why the following doesn't work.
-  error do
-    e = env['sinatra.error']
-    err 500, 'UNEXPECTED_ERROR', e.message
-  end
-
   error MongoMapper::DocumentNotValid do |e|
     warn e.to_s
     warn e.backtrace[0]
-    invalid_entity(e)
+    invalid_entity!(e)
   end
 
   error 500 do |e|
     warn e.to_s
     warn e.backtrace[0]
-    err 500, 'UNEXPECTED_ERROR', e.message
+    error! 500, 'UNEXPECTED_ERROR', e.message
   end
 
 end

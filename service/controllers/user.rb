@@ -9,21 +9,21 @@ class UserController < EntityController
 
     def user_not_found?(user = @user, email = @email)
       @entity_name = User.name
-      not_found_if_nil user, email
+      not_found_if_nil! user, email
     end
 
     def invalid_email?(email = @email)
       if email.to_s.blank?
-        bad_request 'EMPTY_EMAIL', 'Email is required'
+        bad_request! 'EMPTY_EMAIL', 'Email is required'
       elsif (EMAIL_REGEX =~ email).nil?
-        bad_request 'INVALID_EMAIL', "Email '#{email}' is invalid"
+        bad_request! 'INVALID_EMAIL', "Email '#{email}' is invalid"
       end
     end
 
     def email_not_matched?(json)
       email = @email || param[:email]
       json_email = json['email']
-      bad_request 'EMAIL_NOT_MATCH', "Email in URL is not matched '#{email}' != '#{json_email}'" if json_email && email != json_email
+      bad_request! 'EMAIL_NOT_MATCH', "Email in URL is not matched '#{email}' != '#{json_email}'" if json_email && email != json_email
     end
 
   end
@@ -56,7 +56,7 @@ class UserController < EntityController
       end
     end
     headers['WWW-Authenticate'] = 'Basic realm="User Validation"'
-    err 401, 'NOT_AUTHORIZED', 'User validation failed'
+    error! 401, 'NOT_AUTHORIZED', 'User validation failed'
   end
 
   # create a new user
@@ -67,7 +67,7 @@ class UserController < EntityController
     begin
       created User.create! json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity e
+      invalid_entity! e
     end
   end
 
@@ -82,7 +82,7 @@ class UserController < EntityController
         created User.create! json
       end
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity e
+      invalid_entity! e
     end
   end
 

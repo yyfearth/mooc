@@ -6,7 +6,6 @@ class DiscussionController < EntityController
   MULTIPLE_URL = '/discussions'
   GET_BY_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
 
-  @entity = Discussion.name
   @entity_name = Discussion.name
 
   # Store the id globally.
@@ -20,18 +19,16 @@ class DiscussionController < EntityController
   get SINGLE_ID_URL do
     discussion = Discussion.find_by_id(@id)
 
-    if discussion.nil?
-      id_not_found(Discussion, @id)
-    else
-      ok(discussion)
-    end
+    not_found_if_nil!(discussion)
+
+    ok(discussion)
   end
 
   GET_BY_COURSE_URLS.each do |path|
     get path do
       discussion = Discussion.first({course_id: @id})
 
-      id_not_found(Course, @id) if discussion.nil?
+      not_found_if_nil!(discussion)
 
       ok(discussion)
     end
@@ -43,7 +40,7 @@ class DiscussionController < EntityController
   end
 
   post SINGLE_URL do
-    bad_request('The request data does not match expected format') unless %w(title created_by).all? { |k| @json.has_key?(k) }
+    #bad_request!('The request data does not match expected format') unless %w(title created_by).all? { |k| @json.has_key?(k) }
     discussion = Discussion.create(@json)
     puts 'Create discussion: ' << discussion.inspect
     created(discussion)
@@ -52,7 +49,7 @@ class DiscussionController < EntityController
   put SINGLE_ID_URL do
     discussion = Discussion.find_by_id(@id)
 
-    id_not_found(Discussion, @id) if discussion.nil?
+    not_found_if_nil!(discussion)
 
     @json.each { |k| discussion[k] = @json[k] }
 
@@ -65,7 +62,7 @@ class DiscussionController < EntityController
 
   delete SINGLE_ID_URL do
     discussion = Discussion.find(@id)
-    not_found_if_nil(discussion)
+    not_found_if_nil!(discussion)
 
     discussion.destroy
     ok('Delete discussion ' << @id)
