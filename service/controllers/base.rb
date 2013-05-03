@@ -1,20 +1,60 @@
 class EntityController < Sinatra::Base
-  DUP_MSG = 'has already been taken'
+  DUPLICATE_MESSAGE = 'has already been taken'
 
   helpers do
-
-    # auto generate search conditions from parameters
-    # collection is the model class, e.g. User, Course
-    # params is the params hash from the request
-    # options.fields: indicate which fields use for search with the exactly value,
-    # e.g. [:name] with name=test in url, means 'name' should exactly equals to 'test'
-    # options.q: indicate which fields use for fuzzy query,
-    # e.g. [:name,:title] with q=test, means 'test' is a part of fields 'name' OR 'title'
-    def do_search(collection, params, options = {})
+    # do_search -> Array
+    #
+    # A generic method used to build search query and produce search results.
+    #
+    # @param collection
+    #   the collection for searching
+    # @param params
+    #   the parameters sent by the client
+    # @param options
+    #   the optional parameters used to build MongoDB query.
+    #   options[:q] is an array which contains fields you want to select for *partial match* from params as OR relationship.
+    #   options[:fields] is an array which contains fields you want to select for *exact match* from params as AND relationship.
+    #
+    # = Example
+    #   ```
+    #   params = {
+    #     :q => 'test'
+    #     :title => 'dr',
+    #     :name => 'john',
+    #     :created_from => '2013-05-03T08:32:34-07:00',
+    #   }
+    #
+    #   options = {
+    #     :q => [:title],
+    #     :fields => {
+    #       :age.gte => 18,
+    #       :gender => 'male',
+    #     }
+    #   }
+    #
+    #   query = {
+    #     :age.gte => 18,
+    #     :gender => 'male',
+    #     :title => 'dr',
+    #     :$or => [{:title => /test/i}]
+    #     :$created_at.gte => '2013-05-03T08:32:34-07:00',
+    #   }
+    #   ```
+    #
+    #
+    #   The method will generate `created...` and `updated...` operators if `created...` or `updated...` symbols present in the params variable.
+    #
+    #   There are other parameters will be treated specially:
+    #   * :offset => 0
+    #   * :limit => 20
+    #   * :order_by => :created_by.desc
+    def do_search(collection, params, options = {}) # OPTIMIZE: the variable names are too vague.
       query = {}
+
       unless options[:fields].to_a.empty?
         options[:fields].each { |field| query[field] = params[field] unless params[field].to_s.blank? }
       end
+
       unless options[:q].to_a.empty? || params[:q].to_s.blank?
         q = /#{params[:q]}/i
         fields = options[:q]
@@ -24,13 +64,16 @@ class EntityController < Sinatra::Base
           query[fields[0]] = q
         end
       end
+
       query[:created_at.gte] = Time.parse(params[:created_from]) unless params[:created_from].to_s.empty?
       query[:created_at.lte] = Time.parse(params[:created_to]) unless params[:created_to].to_s.empty?
       query[:updated_at.gte] = Time.parse(params[:updated_from]) unless params[:updated_from].to_s.empty?
       query[:updated_at.lte] = Time.parse(params[:updated_to]) unless params[:updated_to].to_s.empty?
+
       offset = params[:offset] || 0
       limit = params[:limit] || 20
       order_by = params[:order_by] || :created_by.desc
+
       collection.where(query).order(order_by).offset(offset).limit(limit)
     end
 
@@ -45,9 +88,9 @@ class EntityController < Sinatra::Base
 
     ### validation
 
-    def invalid_entity!(e)
+    def invalid_entity(e)
       warn e.inspect #, e.backtrace
-      matched = /\b(?<key>\w+)(?: '.+?')? #{DUP_MSG}/.match e.message
+      matched = /\b(?<key>\w+)(?: '.+?')? #{DUPLICATE_MESSAGE}/.match e.message
       if matched
         conflict "#{matched[:key]}_DUPLICATED", e.message
       else
@@ -56,8 +99,8 @@ class EntityController < Sinatra::Base
     end
 
     # halt and return not found error json when the given entity is nil
-    def entity_not_found?(entity = @entity, id = @id)
-      not_found "#{@entity_name}_NOT_FOUND", "#{@entity_name} '#{id}' is not found" if entity.nil?
+    def not_found_if_nil(entity = @entity, id = @id)
+      not_found("#{@entity_name}_NOT_FOUND", "#{@entity_name} '#{id}' is not found") if entity.nil?
     end
 
     # halt and return id not match error json when the id in given json and params of url is not the same
@@ -104,24 +147,41 @@ class EntityController < Sinatra::Base
       err 500, error_code, message
     end
 
-    def not_found(error_code, message)
-      err 404, error_code, message
+    def id_not_found(class_name, id)
+      json = {error: 'NOT_FOUND', message: "Cannot find a #{class_name} where id = #{id}"}.to_json
+      error 404, json
     end
 
-    def bad_request(error_code, message)
+    def not_found(error_code = 'NOT_FOUND', message)
+      err(404, error_code, message)
+    end
+
+    def bad_request(error_code = 'BAD_REQUEST', message)
       err 400, error_code, message
     end
 
     def conflict(error_code, message)
       err 409, error_code, message
     end
-
   end
 
   before { content_type :json }
-  # not_found { err 404, 'NOT_FOUND', 'Not found' }
+
+  # FIXME: not sure why the following doesn't work.
   error do
     e = env['sinatra.error']
+    err 500, 'UNEXPECTED_ERROR', e.message
+  end
+
+  error MongoMapper::DocumentNotValid do |e|
+    warn e.to_s
+    warn e.backtrace[0]
+    invalid_entity(e)
+  end
+
+  error 500 do |e|
+    warn e.to_s
+    warn e.backtrace[0]
     err 500, 'UNEXPECTED_ERROR', e.message
   end
 
