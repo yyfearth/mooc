@@ -11,7 +11,7 @@ class CategoryController < EntityController
   # get a category by id
   get ID_URL do
     category = Category.find_by_id @id
-    entity_not_found? category
+    not_found_if_nil category
     ok category
   end
 
@@ -28,7 +28,7 @@ class CategoryController < EntityController
     begin
       created Category.create! json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
@@ -39,14 +39,14 @@ class CategoryController < EntityController
     begin
       ok Category.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
   # delete a category by id (id)
   delete ID_URL do
     category = Category.find_by_id @id
-    entity_not_found? category
+    not_found_if_nil category
     category.destroy
     ok "Category '#{@id}' deleted"
   end

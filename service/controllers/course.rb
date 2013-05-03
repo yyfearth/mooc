@@ -11,14 +11,14 @@ class CourseController < EntityController
   # get a course by id
   get ID_URL do
     course = Course.find_by_id @id
-    entity_not_found? course
+    not_found_if_nil course
     ok course
   end
 
   # get category of a course
   get "#{ID_URL}/category" do
     course = Course.find_by_id @id
-    entity_not_found? course
+    not_found_if_nil course
     redirect to('/category/' + course.category_id), 301
   end
 
@@ -26,7 +26,7 @@ class CourseController < EntityController
   get "#{ID_URL}/participants" do
     show_dropped = is_param_on? :with_dropped
     course = Course.find_by_id @id
-    entity_not_found? course
+    not_found_if_nil course
     participants = {} # hash index
     course.participants.each do |p|
       if show_dropped || p.status != :DROPPED
@@ -55,7 +55,7 @@ class CourseController < EntityController
     begin
       created Course.create! json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
@@ -66,14 +66,14 @@ class CourseController < EntityController
     begin
       ok Course.update @id, json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
   # delete a course by id (id)
   delete ID_URL do
     course = Course.find_by_id @id
-    entity_not_found? course
+    not_found_if_nil course
     course.destroy
     ok "Course '#{@id}' deleted"
   end
