@@ -32,9 +32,6 @@ class App < Sinatra::Application
 
   end
 
-  before { content_type :json }
-  not_found { error 404, {error: 'NOT_FOUND', message: 'Not found'}.to_json }
-
   # models
   require 'models/user'
   require 'models/category'
@@ -48,14 +45,6 @@ class App < Sinatra::Application
   require 'controllers/category'
   require 'controllers/course'
   require 'controllers/announcement'
-  require 'controllers/discussion'
-
-  use UserController
-  use CategoryController
-  use CourseController
-  use AnnouncementController
-  use DiscussionController
-
-  before { content_type :json }
+  #require 'controllers/discussion'
 
 end

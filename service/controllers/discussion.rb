@@ -1,75 +1,73 @@
-require '../models/discussion'
+DISCUSSION_URL = '/discussion'
+DISCUSSIONS_URL = '/discussions'
+DISCUSSION_ID_URL = "#{DISCUSSION_URL}/:id"
+DISCUSSION_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
 
-class DiscussionController < EntityController
-  SINGLE_ID_URL = '/discussion/:id'
-  SINGLE_URL = '/discussion'
-  MULTIPLE_URL = '/discussions'
-  GET_BY_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
-
+before do
   @entity_name = Discussion.name
+end
 
-  # Store the id globally.
-  [GET_BY_COURSE_URLS, SINGLE_ID_URL].each do |url|
-    before url do
-      @id = params[:id]
-      puts 'id = ' << @id.to_s
-    end
+# Store the id globally.
+(DISCUSSION_COURSE_URLS << DISCUSSION_ID_URL).each do |url|
+  before url do
+    @id = params[:id]
+    puts 'id = ' << @id.to_s
   end
+end
 
-  get SINGLE_ID_URL do
-    discussion = Discussion.find_by_id(@id)
+get DISCUSSION_ID_URL do
+  discussion = Discussion.find_by_id(@id)
+
+  not_found_if_nil!(discussion)
+
+  ok(discussion)
+end
+
+DISCUSSION_COURSE_URLS.each do |path|
+  get path do
+    discussion = Discussion.first({course_id: @id})
 
     not_found_if_nil!(discussion)
 
     ok(discussion)
   end
+end
 
-  GET_BY_COURSE_URLS.each do |path|
-    get path do
-      discussion = Discussion.first({course_id: @id})
+get DISCUSSIONS_URL do
+  ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
+  puts 'Search discussion: ' << discussion.inspect
+end
 
-      not_found_if_nil!(discussion)
+post DISCUSSION_URL do
+  #bad_request!('The request data does not match expected format') unless %w(title created_by).all? { |k| @json.has_key?(k) }
+  discussion = Discussion.create(@json)
+  puts 'Create discussion: ' << discussion.inspect
+  created(discussion)
+end
 
-      ok(discussion)
-    end
-  end
+put DISCUSSION_ID_URL do
+  discussion = Discussion.find_by_id(@id)
 
-  get MULTIPLE_URL do
-    ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
-    puts 'Search discussion: ' << discussion.inspect
-  end
+  not_found_if_nil!(discussion)
 
-  post SINGLE_URL do
-    #bad_request!('The request data does not match expected format') unless %w(title created_by).all? { |k| @json.has_key?(k) }
-    discussion = Discussion.create(@json)
-    puts 'Create discussion: ' << discussion.inspect
-    created(discussion)
-  end
+  @json.each { |k| discussion[k] = @json[k] }
 
-  put SINGLE_ID_URL do
-    discussion = Discussion.find_by_id(@id)
+  discussion.save
 
-    not_found_if_nil!(discussion)
+  puts 'Update discussion: ' << discussion.inspect
 
-    @json.each { |k| discussion[k] = @json[k] }
+  ok(discussion)
+end
 
-    discussion.save
+delete DISCUSSION_ID_URL do
+  discussion = Discussion.find(@id)
+  not_found_if_nil!(discussion)
 
-    puts 'Update discussion: ' << discussion.inspect
+  discussion.destroy
+  ok('Delete discussion ' << @id)
+end
 
-    ok(discussion)
-  end
-
-  delete SINGLE_ID_URL do
-    discussion = Discussion.find(@id)
-    not_found_if_nil!(discussion)
-
-    discussion.destroy
-    ok('Delete discussion ' << @id)
-  end
-
-  # HACK: for debug
-  get '/discussions/all' do
-    ok(Discussion.all)
-  end
+# HACK: for debug
+get '/discussions/all' do
+  ok(Discussion.all)
 end
