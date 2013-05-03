@@ -9,8 +9,6 @@ class Discussion
   key :message_ids, Array
   timestamps!
 
-  attr_protected :created_at
-
   def to_s
     "#{title} #{message_ids.size}"
   end

@@ -9,5 +9,4 @@ class Message
   key :created_by, String, {require: true}
   timestamps!
 
-  attr_protected :created_at
 end
