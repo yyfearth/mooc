@@ -1,18 +1,13 @@
-class Discussion
+class Message
   include MongoMapper::Document
 
-  many :Message, {in: :message_ids}
+  belongs_to :Discussion
 
-  key :course_id, String
   key :title, String, {require: true}
+  key :content, String, {require: true}
+  key :discussion_id, String, {require: true}
   key :created_by, String, {require: true}
-  key :message_ids, Array
   timestamps!
 
   attr_protected :created_at
-
-  def to_s
-    "#{title} #{message_ids.size}"
-  end
 end
-
