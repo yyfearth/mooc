@@ -9,7 +9,7 @@ class UserController < EntityController
 
     def user_not_found?(user = @user, email = @email)
       @entity_name = User.name
-      entity_not_found? user, email
+      not_found_if_nil user, email
     end
 
     def invalid_email?(email = @email)
@@ -67,7 +67,7 @@ class UserController < EntityController
     begin
       created User.create! json
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
@@ -82,7 +82,7 @@ class UserController < EntityController
         created User.create! json
       end
     rescue MongoMapper::DocumentNotValid => e
-      invalid_entity! e
+      invalid_entity e
     end
   end
 
