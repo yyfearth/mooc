@@ -56,4 +56,6 @@ class App < Sinatra::Application
   use AnnouncementController
   use DiscussionController
 
+  before { content_type :json }
+
 end
