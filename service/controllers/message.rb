@@ -3,9 +3,12 @@ SINGLE_URL = '/message'
 MULTIPLE_URL = '/messages'
 SEARCH_BY_DISCUSSION_URL = '/discussion/:id/messages'
 GET_BY_DISCUSSION_URL = '/discussion/:id/message'
+GET_ONE_BY_DISCUSSION_URL = '/discussion/:discussion_id/message/:id'
 
-@entity = Message.name
-@entity_name = Message.name
+before do
+  @entity = Message.name
+  @entity_name = Message.name
+end
 
 # Store the id globally.
 [GET_BY_COURSE_URLS, SINGLE_ID_URL].each do |url|
