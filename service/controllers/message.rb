@@ -5,8 +5,7 @@ SEARCH_BY_DISCUSSION_URL = '/discussion/:id/messages'
 GET_BY_DISCUSSION_URL = '/discussion/:id/message'
 GET_ONE_BY_DISCUSSION_URL = '/discussion/:discussion_id/message/:id'
 
-before do
-  @entity = Message.name
+before '*message*' do # not sure whether it works
   @entity_name = Message.name
 end
 

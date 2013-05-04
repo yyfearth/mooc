@@ -3,7 +3,7 @@ DISCUSSIONS_URL = '/discussions'
 DISCUSSION_ID_URL = "#{DISCUSSION_URL}/:id"
 DISCUSSION_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
 
-before do
+before "#{DISCUSSION_URL}*" do
   @entity_name = Discussion.name
 end
 
@@ -11,6 +11,7 @@ end
 DISCUSSION_COURSE_URLS.join(DISCUSSION_ID_URL).each do |url|
   before url do
     @id = params[:id]
+    @entity_name = Discussion.name
     puts 'id = ' << @id.to_s
   end
 end
