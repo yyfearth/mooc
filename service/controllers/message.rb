@@ -32,6 +32,21 @@ post '/message/:id/message' do
   'create a message'
 end
 
+get '/message/:id/message/:message_id' do
+  # TODO
+  'get a messages'
+end
+
+post '/message/:id/message' do
+  # TODO
+  'create a message'
+end
+
+delete '/message/:id/message/:message_id' do
+  # TODO
+  'delete a message'
+end
+
 delete '/message/:id/message/:message_id' do
   # TODO
   'delete a message'
