@@ -1,5 +1,3 @@
-require '../models/message'
-
 class MessageController < EntityController
   SINGLE_ID_URL = '/message/:id'
   SINGLE_URL = '/message'
