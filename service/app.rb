@@ -45,6 +45,6 @@ class App < Sinatra::Application
   require 'controllers/category'
   require 'controllers/course'
   require 'controllers/announcement'
-  #require 'controllers/discussion'
+  require 'controllers/discussion'
 
 end
