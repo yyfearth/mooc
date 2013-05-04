@@ -162,11 +162,11 @@ end
 before do
   content_type :json
 
+  @id = params[:id]
+  @message_id = params[:message_id]
+
   # Store the request JSON globally for post and put
   if %w(post put).include?(request.request_method.downcase)
-    @id = params[:id]
-    @message_id = params[:message_id]
-
     begin
       request_content = request.body.read
       puts request_content.to_s.empty? ? 'No content' : 'Request content = ' << request_content
