@@ -35,9 +35,9 @@ class MessageController < EntityController
     # TODO
     'delete a message'
   end
+end
 
 # HACK: for debug
 get '/messages/all' do
   ok(Message.all)
 end
-
