@@ -39,7 +39,6 @@ get DISCUSSIONS_URL do
 end
 
 post DISCUSSION_URL do
-  #bad_request!('The request data does not match expected format') unless %w(title created_by).all? { |k| @json.has_key?(k) }
   discussion = Discussion.create(@json)
   puts 'Create discussion: ' << discussion.inspect
   created(discussion)
