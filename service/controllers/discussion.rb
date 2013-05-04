@@ -8,7 +8,7 @@ before do
 end
 
 # Store the id globally.
-(DISCUSSION_COURSE_URLS << DISCUSSION_ID_URL).each do |url|
+DISCUSSION_COURSE_URLS.join(DISCUSSION_ID_URL).each do |url|
   before url do
     @id = params[:id]
     puts 'id = ' << @id.to_s
