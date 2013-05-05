@@ -1,16 +1,15 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require './spec/spec_helper'
 
-require './app'
-
-describe 'controller' do
+describe 'UserController' do
   include Rack::Test::Methods
 
   def app
-    @app ||= App
+    App
   end
 
   it 'should return json' do
     get '/users'
+    puts last_response.body
     last_response.should be_ok
   end
 end
