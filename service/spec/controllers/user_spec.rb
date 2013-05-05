@@ -1,39 +1,62 @@
 require_relative '../spec_helper'
 
-# TODO
-describe 'UserController' do
-  include SpecCommon
+describe 'User API' do
 
-  it 'creats a user' do
+  before :all do
+    @vars = {}
+  end
+
+  it 'creates a user' do
     request_data = {
-        email: 'test@test.com',
-        password: '',
-        title: 'Test Discussion',
+        email: ((0..6).map { (65 + rand(26)).chr }.join) << '@test.com',
+        password: 'a94a8fe5ccb19ba61c4c0873d391e987982fbbd3', # the SHA-1 hash of text 'test'
+        first_name: 'James',
+        last_name: 'Smith',
+        address: {
+            address: '760 United Nations Plaza',
+            city: 'New York',
+            state: 'NY',
+            zip: '10017',
+            country: 'USA',
+        },
     }
 
-    post '/discussion', request_data.to_json
+    post '/user', request_data.to_json
     last_response.status.should == 201
-
-    @vars[:discussion] = response_data = JSON.parse last_response.body
-
-    (/[\w\d]/ =~ response_data['id']).nil?.should be_false
+    last_response.body.nil?.should be_false
+    @vars[:user] = JSON.parse(last_response.body)
   end
 
   it 'gets a user' do
-    get '/users'
-    puts last_response.body
+    get '/user/' << @vars[:user]['email']
     last_response.status.should == 200
   end
 
   it 'updates a user' do
-    get '/users'
-    puts last_response.body
+    request_data = {
+        #email: ((0..6).map { (65 + rand(26)).chr }.join) << '@test.com',
+        password: '0000000000000000000000000000000000000000',
+        first_name: '~James',
+        last_name: '~Smith',
+        address: {
+            address: '~760 United Nations Plaza',
+            city: '~New York',
+            state: '~NY',
+            zip: '~10017',
+            country: '~USA',
+        },
+    }
+
+    put '/user/' << @vars[:user]['email'], request_data.to_json
     last_response.status.should == 200
+    last_response.body.nil?.should be_false
+
+    @vars[:user] = user = JSON.parse(last_response.body)
+    user['password'].should == request_data[:password]
   end
 
   it 'deletes a user' do
-    get '/users'
-    puts last_response.body
+    delete '/user/' << @vars[:user]['email']
     last_response.status.should == 200
   end
 end
