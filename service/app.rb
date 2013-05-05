@@ -33,18 +33,18 @@ class App < Sinatra::Application
   end
 
   # models
-  require 'models/user'
-  require 'models/category'
-  require 'models/course'
-  require 'models/announcement'
-  require 'models/discussion'
+  require './models/user'
+  require './models/category'
+  require './models/course'
+  require './models/announcement'
+  require './models/discussion'
 
   # controllers
-  require 'controllers/base'
-  require 'controllers/user'
-  require 'controllers/category'
-  require 'controllers/course'
-  require 'controllers/announcement'
-  require 'controllers/discussion'
+  require './controllers/base'
+  require './controllers/user'
+  require './controllers/category'
+  require './controllers/course'
+  require './controllers/announcement'
+  #require './controllers/discussion'
 
 end
