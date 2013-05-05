@@ -1,12 +1,12 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-require "#{root_path}/../init"
+require './app'
 
 describe 'controller' do
   include Rack::Test::Methods
 
   def app
-    @app ||= Sinatra::Application
+    @app ||= App
   end
 
   it 'should return json' do

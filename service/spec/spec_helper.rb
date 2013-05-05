@@ -8,4 +8,4 @@ end
 
 set :environment, :test
 
-Dir["#{root_path}/app/models/*.rb"].each{ |file| require file }
+Dir["#{root_path}models/*.rb"].each{ |file| require file }

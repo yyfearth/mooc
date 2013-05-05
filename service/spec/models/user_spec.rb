@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe User do
 
   it 'should create a new user' do
-    KeyValue.new(
+    User.new(
         email: 'test@test.com',
         first_name: 'James',
         last_name: 'Smith',
@@ -11,7 +11,7 @@ describe User do
   end
 
   it 'should create a new user with address' do
-    user = KeyValue.new(
+    user = User.new(
         email: 'test@test.com',
         first_name: 'James',
         last_name: 'Smith',
