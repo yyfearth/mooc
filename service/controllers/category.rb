@@ -6,6 +6,11 @@ before CATEGORY_ID_URL do
   @id = params[:id]
 end
 
+# get all categories
+get %r{/categor(?:y|ies)/(?:list|all)} do
+  ok Category.all
+end
+
 # get a category by id
 get CATEGORY_ID_URL do
   category = Category.find_by_id @id
@@ -21,7 +26,7 @@ get CATEGORIES_URL do
 end
 
 # create a new category
-post CATEGORIES_URL do
+post %r{/categor(?:y|ies)} do
   begin
     created Category.create! @json
   rescue MongoMapper::DocumentNotValid => e
@@ -48,15 +53,8 @@ delete CATEGORY_ID_URL do
 end
 
 # FOR DEBUG ONLY
-CATEGORIES_ALL_URL = CATEGORIES_URL + '/all'
-
-# get all categories
-get CATEGORIES_ALL_URL do
-  ok Category.all
-end
-
 # delete all categories
-delete CATEGORIES_ALL_URL do
-  Category.destroy_all
-  ok 'All categories cleared'
-end
+#delete CATEGORIES_URL do
+#  Category.destroy_all
+#  ok 'All categories cleared'
+#end

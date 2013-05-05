@@ -10,7 +10,7 @@ before '*message*' do # not sure whether it works
 end
 
 # Store the id globally.
-[GET_BY_COURSE_URLS, SINGLE_ID_URL].each do |url|
+[GET_ONE_BY_DISCUSSION_URL, SINGLE_ID_URL].each do |url|
   before url do
     @id = params[:id]
     puts 'id = ' << @id.to_s
