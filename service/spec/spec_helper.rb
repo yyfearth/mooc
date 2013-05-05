@@ -9,3 +9,9 @@ end
 RSpec.configure do |config|
   config.include Rack::Test::Methods
 end
+
+module SpecCommon
+  before :all do
+    @vars = {}
+  end
+end

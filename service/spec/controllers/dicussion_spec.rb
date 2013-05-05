@@ -1,10 +1,7 @@
 require_relative '../spec_helper'
 
 describe 'Discussion API' do
-
-  before :all do
-    @vars = {}
-  end
+  include SpecCommon
 
   it 'creates a discussion' do
     request_data = {
