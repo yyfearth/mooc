@@ -48,7 +48,9 @@ class User
     # replace id to email
     self.id = self.email
     # remove address if it is empty
-    self.address = nil if self.address.nil? && self.address.empty?
+    unless self.address.nil?
+      self.address = nil if !self.address.is_a?(Address) || self.address.empty?
+    end
   end
 
   def serializable_hash(options = {})
