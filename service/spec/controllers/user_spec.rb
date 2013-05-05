@@ -22,18 +22,18 @@ describe 'UserController' do
   it 'gets a user' do
     get '/users'
     puts last_response.body
-    last_response.should be_ok
+    last_response.status.should == 200
   end
 
   it 'updates a user' do
     get '/users'
     puts last_response.body
-    last_response.should be_ok
+    last_response.status.should == 200
   end
 
   it 'deletes a user' do
     get '/users'
     puts last_response.body
-    last_response.should be_ok
+    last_response.status.should == 200
   end
 end
