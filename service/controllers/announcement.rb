@@ -10,7 +10,7 @@ helpers do
   end
 end
 
-before "#{ANNOUNCEMENT_URL}*" do
+before "#{ANNOUNCEMENT_ID_URL}*" do
   @entity_name = Announcement.name
   @id = params[:id]
 end
