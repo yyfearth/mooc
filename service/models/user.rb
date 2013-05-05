@@ -23,7 +23,6 @@ end
 
 class User
   include MongoMapper::Document
-  safe
 
   key :email, String,
       required: true,
