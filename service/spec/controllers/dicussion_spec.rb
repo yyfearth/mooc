@@ -1,14 +1,7 @@
-require 'rspec'
-require 'rack/test'
-require_relative '../app'
+require_relative '../spec_helper'
 
 describe 'Discussion API' do
   include Rack::Test::Methods
-
-  # It turns out that when Rake does the CRUD, it uses this method to get the application.
-  def app
-    App
-  end
 
   before :all do
     @vars = {}

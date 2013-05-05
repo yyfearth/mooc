@@ -1,4 +1,4 @@
-require './spec/spec_helper'
+require_relative '../spec_helper'
 
 describe 'UserController' do
   it 'should return json' do
