@@ -1,4 +1,4 @@
-## Course with Participant
+## Modal for Course with Participant
 
 class Participant
   include MongoMapper::EmbeddedDocument

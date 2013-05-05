@@ -1,27 +1,29 @@
+## Model for User and Address
+
+class Address
+  include MongoMapper::EmbeddedDocument
+
+  key :address, String
+  key :city, String
+  key :state, String
+  key :zip, String
+  key :country, String
+  key :student_id, String
+
+  def empty?
+    self.address.to_s.empty? && self.city.to_s.empty? &&
+        self.state.to_s.empty? && self.zip.to_s.empty? && self.country.to_s.empty?
+  end
+
+  def serializable_hash(options = {})
+    super({except: :id}.merge(options))
+  end
+
+end
+
 class User
   include MongoMapper::Document
   safe
-
-  class Address
-    include MongoMapper::EmbeddedDocument
-
-    key :address, String
-    key :city, String
-    key :state, String
-    key :zip, String
-    key :country, String
-    key :student_id, String
-
-    def empty?
-      self.address.to_s.empty? && self.city.to_s.empty? &&
-          self.state.to_s.empty? && self.zip.to_s.empty? && self.country.to_s.empty?
-    end
-
-    def serializable_hash(options = {})
-      super({except: :id}.merge(options))
-    end
-
-  end
 
   key :email, String,
       required: true,
