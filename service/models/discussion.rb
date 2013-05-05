@@ -8,9 +8,5 @@ class Discussion
   key :created_by, String, {require: true}
   key :message_ids, Array
   timestamps!
-
-  def to_s
-    "#{title} #{message_ids.size}"
-  end
 end
 
