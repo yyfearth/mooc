@@ -9,7 +9,6 @@ before '*message*' do # not sure whether it works
   @entity_name = Message.name
 end
 
-# Store the id globally.
 [GET_ONE_BY_DISCUSSION_URL, SINGLE_ID_URL].each do |url|
   before url do
     @id = params[:id]
