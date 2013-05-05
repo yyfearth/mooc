@@ -6,6 +6,11 @@ before "#{COURSE_ID_URL}*" do
   @id = params[:id]
 end
 
+# get all courses
+get %r{/courses?/(?:list|all)} do
+  ok Course.all
+end
+
 # get a course by id
 get COURSE_ID_URL do
   course = Course.find_by_id @id
@@ -48,7 +53,7 @@ get COURSES_URL do
 end
 
 # create a new course
-post COURSES_URL do
+post %r{/courses?} do
   begin
     created Course.create! @json
   rescue MongoMapper::DocumentNotValid => e
@@ -75,15 +80,8 @@ delete COURSE_ID_URL do
 end
 
 # FOR DEBUG ONLY
-COURSES_ALL_URL = COURSES_URL + '/all'
-
-# get all courses
-get COURSES_ALL_URL do
-  ok Course.all
-end
-
 # delete all courses
-delete COURSES_ALL_URL do
-  Course.destroy_all
-  ok 'All courses cleared'
-end
+#delete COURSES_URL do
+#  Course.destroy_all
+#  ok 'All courses cleared'
+#end

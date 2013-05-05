@@ -1,16 +1,39 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require_relative '../spec_helper'
 
-require "#{root_path}/../init"
+# TODO
+describe 'UserController' do
+  include SpecCommon
 
-describe 'controller' do
-  include Rack::Test::Methods
+  it 'creats a user' do
+    request_data = {
+        email: 'test@test.com',
+        password: '',
+        title: 'Test Discussion',
+    }
 
-  def app
-    @app ||= Sinatra::Application
+    post '/discussion', request_data.to_json
+    last_response.status.should == 201
+
+    @vars[:discussion] = response_data = JSON.parse last_response.body
+
+    (/[\w\d]/ =~ response_data['id']).nil?.should be_false
   end
 
-  it 'should return json' do
+  it 'gets a user' do
     get '/users'
-    last_response.should be_ok
+    puts last_response.body
+    last_response.status.should == 200
+  end
+
+  it 'updates a user' do
+    get '/users'
+    puts last_response.body
+    last_response.status.should == 200
+  end
+
+  it 'deletes a user' do
+    get '/users'
+    puts last_response.body
+    last_response.status.should == 200
   end
 end

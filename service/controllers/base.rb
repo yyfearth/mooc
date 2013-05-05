@@ -162,6 +162,9 @@ end
 before do
   content_type :json
 
+  @id = params[:id]
+  @message_id = params[:message_id]
+
   # Store the request JSON globally for post and put
   if %w(post put).include?(request.request_method.downcase)
     begin

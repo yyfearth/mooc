@@ -18,7 +18,6 @@ class App < Sinatra::Application
     db_port = config[environment]['port']
     db_name = config[environment]['database']
 
-
     # Configure the environment
 
     MongoMapper.connection = Mongo::Connection.new db_host, db_port
@@ -29,22 +28,23 @@ class App < Sinatra::Application
     helpers do
       include Rack::Utils
     end
-
   end
 
   # models
-  require 'models/user'
-  require 'models/category'
-  require 'models/course'
-  require 'models/announcement'
-  require 'models/discussion'
+  require_relative 'models/user'
+  require_relative 'models/category'
+  require_relative 'models/course'
+  require_relative 'models/announcement'
+  require_relative 'models/message'
+  require_relative 'models/discussion'
 
   # controllers
-  require 'controllers/base'
-  require 'controllers/user'
-  require 'controllers/category'
-  require 'controllers/course'
-  require 'controllers/announcement'
-  #require 'controllers/discussion'
+  require_relative 'controllers/base'
+  require_relative 'controllers/user'
+  require_relative 'controllers/category'
+  require_relative 'controllers/course'
+  require_relative 'controllers/announcement'
+  require_relative 'controllers/message'
+  require_relative 'controllers/discussion'
 
 end

@@ -1,11 +1,17 @@
-require 'rubygems'
-require 'sinatra'
 require 'rack/test'
+require_relative '../app'
 
-def root_path
-  File.expand_path '../', __FILE__
+# It turns out that when Rake does the CRUD, it uses this method to get the application.
+def app
+  App
 end
 
-set :environment, :test
+RSpec.configure do |config|
+  config.include Rack::Test::Methods
+end
 
-Dir["#{root_path}/app/models/*.rb"].each{ |file| require file }
+module SpecCommon
+  before :all do
+    @vars = {}
+  end
+end

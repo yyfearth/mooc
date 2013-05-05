@@ -1,10 +1,10 @@
 class Category
   include MongoMapper::Document
-  safe
 
   key :name, String,
       required: true,
       unique: true
+  key :description, String
   timestamps!
 
   DUP_MSG = 'has already been taken'

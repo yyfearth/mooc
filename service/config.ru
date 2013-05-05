@@ -1,6 +1,4 @@
-$: << File.expand_path(File.dirname(__FILE__))
-
-require 'app'
+require './app'
 
 disable :protection
 

@@ -3,7 +3,7 @@ require 'mongo_mapper'
 require 'time'
 
 # Initialize MongoMapper
-config = YAML.load_file(File.dirname(__FILE__) << '/config/mongo.yml')
+config = YAML.load_file(File.dirname(__FILE__) << '/../config/mongo.yml')
 
 environment = config['environment']
 
@@ -15,8 +15,9 @@ MongoMapper.connection = Mongo::Connection.new(db_host, db_port)
 MongoMapper.database = db_name
 MongoMapper.connection.connect
 
-require './models/discussion'
-require './models/course'
+require_relative '../models/message'
+require_relative '../models/discussion'
+require_relative '../models/course'
 
 Course.destroy_all
 Discussion.destroy_all

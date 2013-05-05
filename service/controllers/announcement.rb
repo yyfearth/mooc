@@ -1,5 +1,6 @@
-ANNOUNCEMENT_ID_URL = '/announcement/:id'
+ANNOUNCEMENT_URL = '/announcement'
 ANNOUNCEMENTS_URL = '/announcements'
+ANNOUNCEMENT_ID_URL = "#{ANNOUNCEMENT_URL}/:id"
 
 helpers do
   def search_announcements!
@@ -9,7 +10,7 @@ helpers do
   end
 end
 
-before "#{ANNOUNCEMENT_ID_URL}*" do
+before "#{ANNOUNCEMENT_URL}*" do
   @entity_name = Announcement.name
   @id = params[:id]
 end
@@ -48,7 +49,7 @@ get "/course/:course_id#{ANNOUNCEMENTS_URL}" do
 end
 
 # create a new announcement
-post ANNOUNCEMENTS_URL do
+post %r{/announcements?} do
   begin
     created Announcement.create! @json
   rescue MongoMapper::DocumentNotValid => e
@@ -74,16 +75,14 @@ delete ANNOUNCEMENT_ID_URL do
   ok "Announcement '#{@id}' deleted"
 end
 
-# FOR DEBUG ONLY
-ANNOUNCEMENTS_ALL_URL = ANNOUNCEMENTS_URL + '/all'
-
 # get all announcements
-get ANNOUNCEMENTS_ALL_URL do
+get %r{/announcements?/(?:list|all)} do
   ok Announcement.all
 end
 
+# FOR DEBUG ONLY
 # delete all announcements
-delete ANNOUNCEMENTS_ALL_URL do
-  Announcement.destroy_all
-  ok 'All announcements cleared'
-end
+#delete ANNOUNCEMENTS_URL do
+#  Announcement.destroy_all
+#  ok 'All announcements cleared'
+#end

@@ -1,17 +1,17 @@
-require File.dirname(__FILE__) + '/../spec_helper'
+require_relative '../spec_helper'
 
 describe User do
 
-  it 'should create a new user' do
-    KeyValue.new(
+  it 'creates a new user' do
+    User.new(
         email: 'test@test.com',
         first_name: 'James',
         last_name: 'Smith',
     ).should_not be_nil
   end
 
-  it 'should create a new user with address' do
-    user = KeyValue.new(
+  it 'creates a new user with address' do
+    user = User.new(
         email: 'test@test.com',
         first_name: 'James',
         last_name: 'Smith',

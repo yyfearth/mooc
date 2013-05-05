@@ -1,6 +1,5 @@
 USER_EMAIL_URL = '/user/:email'
 USERS_URL = '/users'
-ALL_USERS_URL = '/users/all'
 EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
 
 helpers do
@@ -27,8 +26,15 @@ helpers do
 end
 
 before USER_EMAIL_URL do
-  @email = params[:email]
+  email = params[:email]
+  pass if email =~ /^list|all$/
+  @email = email
   invalid_email?
+end
+
+# get all users
+get %r{/users?/(?:list|all)} do
+  ok User.all
 end
 
 # get a user by email (id)
@@ -58,7 +64,7 @@ get '/user/validation' do
 end
 
 # create a new user
-post USERS_URL do
+post %r{/users?} do
   @email = @json['email']
   invalid_email?
   begin
@@ -91,14 +97,8 @@ delete USER_EMAIL_URL do
 end
 
 # FOR DEBUG ONLY
-
-# get all users
-get ALL_USERS_URL do
-  ok User.all
-end
-
 # delete all users
-delete ALL_USERS_URL do
-  User.destroy_all
-  ok 'All users cleared'
-end
+#delete USERS_URL do
+#  User.destroy_all
+#  ok 'All users cleared'
+#end

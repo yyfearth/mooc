@@ -1,4 +1,4 @@
-## Course with Participant
+## Modal for Course with Participant
 
 class Participant
   include MongoMapper::EmbeddedDocument
@@ -15,7 +15,6 @@ end
 
 class Course
   include MongoMapper::Document
-  safe
 
   key :title, String, required: true, unique: true, length: 255
   key :description, String, required: true
