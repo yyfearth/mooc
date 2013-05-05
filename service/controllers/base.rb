@@ -162,9 +162,6 @@ end
 before do
   content_type :json
 
-  @id = params[:id]
-  @message_id = params[:message_id]
-
   # Store the request JSON globally for post and put
   if %w(post put).include?(request.request_method.downcase)
     begin
@@ -179,7 +176,9 @@ before do
   end
 end
 
-not_found { not_found! 'NOT_FOUND', 'Not found' }
+not_found do
+  not_found! 'NOT_FOUND', 'Not found'
+end
 
 error MongoMapper::DocumentNotValid do |e|
   warn e.to_s
