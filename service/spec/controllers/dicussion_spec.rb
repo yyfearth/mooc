@@ -1,7 +1,6 @@
 require_relative '../spec_helper'
 
 describe 'Discussion API' do
-  include Rack::Test::Methods
 
   before :all do
     @vars = {}
