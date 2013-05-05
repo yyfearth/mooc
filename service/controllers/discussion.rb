@@ -7,7 +7,7 @@ before "#{DISCUSSION_URL}*" do
   @entity_name = Discussion.name
 end
 
-DISCUSSION_COURSE_URLS.join(DISCUSSION_ID_URL).each do |url|
+DISCUSSION_COURSE_URLS.concat([DISCUSSION_ID_URL]).each do |url|
   before url do
     @id = params[:id]
     @entity_name = Discussion.name
