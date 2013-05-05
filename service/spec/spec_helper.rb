@@ -1,11 +1,11 @@
-require 'rubygems'
-require 'sinatra'
+require 'rspec'
 require 'rack/test'
+require './app'
 
-def root_path
-  File.expand_path '../', __FILE__
+def app
+  App
 end
 
-set :environment, :test
-
-Dir["#{root_path}models/*.rb"].each{ |file| require file }
+RSpec.configure do |conf|
+  conf.include Rack::Test::Methods
+end
