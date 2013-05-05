@@ -1,11 +1,12 @@
-require 'rspec'
 require 'rack/test'
-require './app'
+require_relative '../app'
+
+#set :environment, :test
 
 def app
   App
 end
 
-RSpec.configure do |conf|
-  conf.include Rack::Test::Methods
+RSpec.configure do |config|
+  config.include Rack::Test::Methods
 end
