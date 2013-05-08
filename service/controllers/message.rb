@@ -1,5 +1,5 @@
 MESSAGE_URL = '/discussion/:discussion_id/message'
-MESSAGES_URL = '/messages'
+MESSAGES_URL = %r{/messages?'}
 MESSAGE_ID_URL = "#{MESSAGE_URL}/:id"
 MESSAGE_COURSE_URLS = ['/message/course/:id', MESSAGE_URL]
 
@@ -16,32 +16,24 @@ MESSAGE_COURSE_URLS.concat([MESSAGE_ID_URL]).each do |url|
   end
 end
 
-get %r'/discussions?/:discussion_id/messages?/:id' do
-  discussion = Discussion.find_by_id(@id)
+get MESSAGE_ID_URL do
+  discussion = Discussion.find_by_id @discussion_id
+  not_found_if_nil! discussion
 
-  not_found_if_nil!(discussion)
+  message = Message.find_by_id @id
+  not_found_if_nil! message
 
   ok(message)
 end
 
-MESSAGE_COURSE_URLS.each do |path|
-  get path do
-    message = Message.first({course_id: @id})
-
-    not_found_if_nil! message
-
-    ok(message)
-  end
-end
-
 get MESSAGES_URL do
+  puts 'Search message'
   ok(do_search(Message, params, {q: [:title], fields: [:course_id], }))
-  puts 'Search message: ' << message.inspect
 end
 
 post MESSAGE_URL do
   discussion = Discussion.find_by_id @discussion_id
-  not_found_if_nil! discussion
+  not_found_if_nil! discussion, @discussion_id
 
   message = Message.new @json
   message.discussion_id = discussion.id
@@ -51,30 +43,33 @@ post MESSAGE_URL do
 end
 
 put MESSAGE_ID_URL do
+  discussion = Discussion.find_by_id @discussion_id
+  not_found_if_nil! discussion
+
   message = Message.find_by_id @id
-
   not_found_if_nil! message
-  bad_request! if @json.has_key? :id || message[:id] != @json[:id]
 
-  allowed_fields = %w(course_id title created_by)
-  allowed_fields.each do |field|
-    message[field] = @json[field] unless @json[field].nil?
-  end
+  [:id, :discussion_id].each { |field|
+    bad_request! if @json.has_key? field || message[field] != @json[field]
+  }
 
+  message = Message.update @id, @json
   puts 'Update message: ' << message.inspect
-
   ok message
 end
 
 delete MESSAGE_ID_URL do
-  message = Message.find(@id)
+  discussion = Discussion.find_by_id @discussion_id
+  not_found_if_nil! discussion
+
+  message = Message.find_by_id @id
   not_found_if_nil! message
 
-  message.destroy
-  ok JSON.parse message
+  Message.destroy @id
+  ok message
 end
 
 # HACK: for debug
-get '/messages/all' do
+get %r{/messages?/(?:list|all)} do
   ok Message.all
 end
