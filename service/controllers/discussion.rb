@@ -35,10 +35,10 @@ end
 
 get DISCUSSIONS_URL do
   ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
-  puts 'Search discussion: ' << discussion.inspect
+  puts 'Search discussion: ' #<< discussion.inspect
 end
 
-post DISCUSSION_URL do
+post %r{/discussions?} do
   discussion = Discussion.create @json
   puts 'Create discussion: ' << discussion.inspect
   created(discussion)
