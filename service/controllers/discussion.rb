@@ -34,11 +34,11 @@ DISCUSSION_COURSE_URLS.each do |path|
 end
 
 get DISCUSSIONS_URL do
+  puts 'Search discussion: ' << params.inspect
   ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
-  puts 'Search discussion: ' << discussion.inspect
 end
 
-post DISCUSSION_URL do
+post %r{/discussions?} do
   discussion = Discussion.create @json
   puts 'Create discussion: ' << discussion.inspect
   created(discussion)
