@@ -1,43 +1,47 @@
 <html>
-<title><% @title %> </title>
+<title>
+  <% @title %> </title>
+
 <body>
-<% 
-fname = @user.first_name
-lname = @user.last_name
-user=fname + ' ' + lname
+<%
+   fname = @user.first_name
+   lname = @user.last_name
+   user=fname + ' ' + lname
 %>
 <% @course.each do |course| %>
-	@course_id << course
+    @course_id << course
 <% end %>
 <h2>Start a discussion</h2>
 <%= form_for :discussion do |form| %>
-  <fieldset>
-  <legend><b>Discussion</b></legend>
-   <div class="post">
-    <p>
-    <label for title="created_by">Created by:</label>
-      <%= user %> 
-    </p>
-    <p>
-      <label for="title">Title: </label>
-      <%= form.text_field :title %>  <!-- here, if title field not in DB table, error because variable form in form_for :discussion points to DB  					     since 'def new' has @discussion = Discussion.new which takes all the field from database and creates a new 				     array -->
-    </p>
-    <div class="post">
-	<p>
-	  <label for="course_id">Dicussion topic</label>
-	  <%= form.select :course_id, (@course_id) %>
-	    <% @course.each do |course| %>
-		  <option value="<%= course.title %>" selected=""><%= course.title %></option>
-	    <% end %>
-              <option value="General" selected ="General Discussion">General discussion</option>
-	  </select>
-	 </p>
-	<div>
+    <fieldset>
+      <legend><b>Discussion</b></legend>
+      <div class="post">
+        <p>
+          <label for title="created_by">Created by:</label>
+          <%= user %>
+        </p>
+
+        <p>
+          <label for="title">Title: </label>
+          <%= form.text_field :title %>  <!-- here, if title field not in DB table, error because variable form in form_for :discussion points to DB  					     since 'def new' has @discussion = Discussion.new which takes all the field from database and creates a new 				     array -->
+        </p>
+
+        <div class="post">
+          <p>
+            <label for="course_id">Dicussion topic</label>
+            <%= form.select :course_id, (@course_id) %>
+            <% @course.each do |course| %>
+                <option value="<%= course.title %>" selected=""><%= course.title %></option>
+            <% end %>
+            <option value="General" selected="General Discussion">General discussion</option>
+            </select>
+          </p>
+          <div>
 	 <span style="float: right">
  	   <%= submit_tag "Create", :class => "submit", :action => "create" %>
 	 </span>
-        </div>
-  </fieldset>
+          </div>
+    </fieldset>
 <% end %>
 </body>
 

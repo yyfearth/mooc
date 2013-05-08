@@ -1,28 +1,28 @@
-<br clear="all"/> 
+<br clear="all"/>
 <table class="users">
- <% enroll =0 %>
-         <tr>
-           <th class="label"><b>Title</b></th>
-  	   <th class="label"><b>Description</b></th>
-	   <th class="label"><b>Status </b></th>
-	</tr>
-	<% @courses.each do |course| %>
-	<!--%= course.participants.length %-->
-	<tr>
-	   <td><%= course.title %> </td>
-	   <td><%= course.description %></td>
-	   <% (0...course.participants.length).each do |i| %>
-		<!--%= course.participants[i].email %-->
-		<% if course.participants[i].email == @user.email %>
-			<td><%= course.participants[i].status %></td>
-			<% enroll = 1 %>
-			<% break %>
-		<% end %>
-	   <% end %>
-	   <% if enroll == 1 %>
-		<% break %>
-	   <% else %>
-	   <td>Enroll</td>
-	   <% end %>
-	<% end %>
+  <% enroll =0 %>
+  <tr>
+    <th class="label"><b>Title</b></th>
+    <th class="label"><b>Description</b></th>
+    <th class="label"><b>Status </b></th>
+  </tr>
+  <% @courses.each do |course| %>
+      <!--%= course.participants.length %-->
+      <tr>
+        <td><%= course.title %> </td>
+        <td><%= course.description %></td>
+        <% (0...course.participants.length).each do |i| %>
+            <!--%= course.participants[i].email %-->
+            <% if course.participants[i].email == @user.email %>
+                <td><%= course.participants[i].status %></td>
+                <% enroll = 1 %>
+                <% break %>
+            <% end %>
+        <% end %>
+        <% if enroll == 1 %>
+            <% break %>
+        <% else %>
+            <td>Enroll</td>
+        <% end %>
+  <% end %>
 </table>

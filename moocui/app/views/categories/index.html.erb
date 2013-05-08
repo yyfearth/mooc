@@ -1,36 +1,37 @@
 <html>
 <head>
-<title><%= @title %></title>
+  <title><%= @title %></title>
 </head>
 <body>
 
-<%= link_to_unless_current "Existing Categories",  :action => "index" %> | 
+<%= link_to_unless_current "Existing Categories", :action => "index" %> |
 <%= link_to_unless_current "Create a new Category", :action => "create" %>
-<div font: 10px 'Lucida Console', monospace; color: #666666>
+<div font:
+10px 'Lucida Console', monospace; color: #666666>
 <span style="float:center">
-<p><b>San Jose State University Majors: </p> </span></div>
+<p><b>San Jose State University Majors:</p> </span></div>
 <br/>
 <% if !@categories.nil? and @categories!= [] %>
-<% i = 1 %>
-<div id = "bio" class = "faq_answer">
-	<span style ="float:"center">
-	    <table class="users">
-        	 <tr>
-        	   <th class="label"><b>Sr. No</b></th>
-	  	   <th class ="label"><b>Category Name</b></th>
- 		 </tr>
- 	 <% @categories.each do |category| %>
-		 <tr>
-		   <td><%= i %> </td>
-		   <td><%= category.name %>
-		 </tr>
-		<% i=i+1 %>
-  	<% end %>
-</table>
-	</span>
-   </div>	
+    <% i = 1 %>
+    <div id="bio" class="faq_answer">
+      <span style="float:" center">
+      <table class="users">
+        <tr>
+          <th class="label"><b>Sr. No</b></th>
+          <th class="label"><b>Category Name</b></th>
+        </tr>
+        <% @categories.each do |category| %>
+            <tr>
+              <td><%= i %> </td>
+              <td><%= category.name %>
+            </tr>
+            <% i=i+1 %>
+        <% end %>
+      </table>
+      </span>
+    </div>
 <% else %>
-<p> No categories currently exist. </p>
+    <p> No categories currently exist. </p>
 <% end %>
 <%= @content_for_layout %>
 </b></body>

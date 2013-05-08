@@ -8,6 +8,7 @@ class Object
       false
     end
   end
+
   # Return true if the object can be converted to a valid float.
   def valid_float?
     begin

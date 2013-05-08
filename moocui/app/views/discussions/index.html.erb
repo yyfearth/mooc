@@ -1,42 +1,43 @@
 <html>
 <head>
-<title><%= @title %></title>
+  <title><%= @title %></title>
 </head>
 <body>
 <h2>Discussion Forum</h2>
-<%= link_to_unless_current "Current Discussions",  :action => "index" %> | 
+<%= link_to_unless_current "Current Discussions", :action => "index" %> |
 <%= link_to_unless_current "Start a new discussion", :action => "new" %>
 <% if !@posts.nil? and @posts!= [] %>
-<% i = 1 %>
-<div id = "bio" class = "faq_answer">
-	<span style ="float:"center">
-	    <table class="users">
-        	 <tr>
-        	   <th class="label"><b>Sr. No</b></th>
-	  	   <th class ="label"><b>Topic</b></th>
-		   <th class ="label"><b>Title</b></th>
-		   <th class ="label"><b>Creator</b></th>
- 		 </tr>
- 	         <% @posts.each do |posts| %>
-		 <tr>
-		   <td><%= i %> </td>
-		   <td><%= posts.course_id %>
-   		   <td><%= posts.title_id %>
-		   <td><%= posts.created_by %>
-		 </tr>
-		<% i=i+1 %>
-  	        <% end %>
-	   </table>
-	</span>
-   </div>	
+    <% i = 1 %>
+    <div id="bio" class="faq_answer">
+      <span style="float:" center">
+      <table class="users">
+        <tr>
+          <th class="label"><b>Sr. No</b></th>
+          <th class="label"><b>Topic</b></th>
+          <th class="label"><b>Title</b></th>
+          <th class="label"><b>Creator</b></th>
+        </tr>
+        <% @posts.each do |posts| %>
+            <tr>
+              <td><%= i %> </td>
+              <td><%= posts.course_id %>
+              <td><%= posts.title_id %>
+              <td><%= posts.created_by %>
+            </tr>
+            <% i=i+1 %>
+        <% end %>
+      </table>
+      </span>
+    </div>
 <% else %>
-<br clear="all"/><br clear="all"/>
-<b><p>Currently no discussions exist. </p>
-<br clear="all"/>
+    <br clear="all"/><br clear="all"/>
+    <b><p>Currently no discussions exist. </p>
+      <br clear="all"/>
 <% end %>
 <%= @content_for_layout %>
 </b></body>
 <br clear="all"/>
+
 <div id="footer">
   Copyright © 2013, My Company. All rights reserved.
 </div>

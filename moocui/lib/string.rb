@@ -6,8 +6,8 @@ class String
 
   # Capitalize each word (space separated).
   def capitalize_each
-   space = " "
-   split(space).each{ |word| word.capitalize! }.join(space)
+    space = ' '
+    split(space).each { |word| word.capitalize! }.join(space)
   end
 
   # Capitalize each word in place.

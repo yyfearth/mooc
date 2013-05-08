@@ -1,49 +1,49 @@
 Moocui::Application.routes.draw do
-  get "discussions/index"
+  get 'discussions/index'
 
-  get "discussions/add"
+  get 'discussions/add'
 
-  get "discussions/search"
+  get 'discussions/search'
 
-  get "announcements/index"
+  get 'announcements/index'
 
-  get "announcements/add"
+  get 'announcements/add'
 
-  get "announcements/search"
+  get 'announcements/search'
 
-  get "courses/index"
+  get 'courses/index'
 
-  get "courses/search"
+  get 'courses/search'
 
-  get "courses/add"
+  get 'courses/add'
 
-  get "categories/index"
-  
-  get "announcements/show"
+  get 'categories/index'
 
-  get "categories/search"
+  get 'announcements/show'
 
-  get "categories/add"
+  get 'categories/search'
 
-  get "users/index"
+  get 'categories/add'
 
-  get "users/register"
+  get 'users/index'
 
-  get "users/search"
+  get 'users/register'
 
-  get "home/index"
+  get 'users/search'
 
-  get "users/login"
+  get 'home/index'
 
-  post "users/register"
+  get 'users/login'
 
-  post "users/login"
+  post 'users/register'
 
-  get "users/logout"
+  post 'users/login'
 
-  post "users/logout"
+  get 'users/logout'
 
-  post "announcements/index"  
+  post 'users/logout'
+
+  post 'announcements/index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -91,11 +91,11 @@ Moocui::Application.routes.draw do
   #     resources :products
   #   end
 
-  # You can have the root of your site routed with "root"
+  # You can have the root of your site routed with 'root'
   # just remember to delete public/index.html.
   root :to => 'home#index'
 
-  # See how all your routes lay out with "rake routes"
+  # See how all your routes lay out with 'rake routes'
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.

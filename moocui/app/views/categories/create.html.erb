@@ -1,21 +1,23 @@
 <h2>Create a Category</h2>
 <%= form_for :category do |form| %>
-<fieldset>
-<legend><b>Enter the Category Details</b></legend>
-<div class="post">
-<p>
-<label for="created_by">Created by:</label>
-<%= @user.email %>
-</p>
-<p>
-  <label for="name">Category Name: </label><br>
-  <%= form.text_field :name %>
-</p>
-<div>
+    <fieldset>
+      <legend><b>Enter the Category Details</b></legend>
+      <div class="post">
+        <p>
+          <label for="created_by">Created by:</label>
+          <%= @user.email %>
+        </p>
+
+        <p>
+          <label for="name">Category Name: </label><br>
+          <%= form.text_field :name %>
+        </p>
+
+        <div>
 <span style="float: right">
 <%= submit_tag "Create", :align => "right" %></span></div>
-</div>
-</fieldset>
+      </div>
+    </fieldset>
 <% end %>
 
 
