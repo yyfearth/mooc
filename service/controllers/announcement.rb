@@ -50,6 +50,7 @@ end
 
 # create a new announcement
 post %r{/announcements?} do
+  @json['course_id'] = @json['courseId'] if @json['course_id'].nil? and @json['courseId']
   begin
     created Announcement.create! @json
   rescue MongoMapper::DocumentNotValid => e
