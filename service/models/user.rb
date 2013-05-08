@@ -30,18 +30,18 @@ class User
       length: 255,
       format: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
   key :password, String,
-      required: true,
+      #required: true,
       length: 40,
       format: /\A[0-9a-f]{40}\Z/ # sha-1 hash
-  key :first_name, String, required: true
-  key :last_name, String, required: true
+  key :first_name, String #, required: true
+  key :last_name, String #, required: true
   key :address, Address
   timestamps!
 
   DUP_MSG = 'has already been taken'
 
   before_validation do
-    self.email = self.email.downcase # ignore case
+    self.email.downcase! # ignore case
   end
 
   before_create do
