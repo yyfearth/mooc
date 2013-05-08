@@ -8,7 +8,7 @@ helpers do
     not_found_if_nil! course
     begin
       course.push_uniq participants: @json
-      ok "User #{email} enrolled course #{@id}"
+      ok "User #{@json['email']} enrolled course #{@id}"
     rescue MongoMapper::DocumentNotValid => e
       invalid_entity! e
     end
