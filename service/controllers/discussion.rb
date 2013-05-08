@@ -64,8 +64,7 @@ delete DISCUSSION_ID_URL do
   discussion = Discussion.find(@id)
   not_found_if_nil! discussion
 
-  discussion.destroy
-  ok JSON.parse discussion
+  ok Discussion.destroy @id
 end
 
 # HACK: for debug
