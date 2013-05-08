@@ -1,0 +1,60 @@
+<h1>Announcements</h1>
+<%= form_for :user do |form| %>
+  <% if @x == 0 %>
+	<div class="post">
+	<p>
+	  <label for="course_id">Display announcement for Course </label>
+	  <select name="course_id">
+	    <% @course.each do |course| %>
+		  <option value="<%= course.title %>" selected=""><%= course.title %></option>
+	    <% end %>
+	  </select>
+	<div>
+	<span style="float: right">
+	<%= submit_tag "Display", :class => "submit" %></span></div>
+	    <!--%= form.text_field :category_id %-->
+	</p>
+	<br/><br/>
+	</div>
+  <% else %>
+	<p>
+	<% x = 0 %>
+	<% i=1 %>
+	   <div id = "bio" class = "faq_answer">
+	    <span style ="float:center">
+	      <table class="users">
+	    <% (0...@announcements.length).each do |j| %>
+		    <% if @course_id.downcase == @announcements[j].title.downcase %>
+	   	     <% if x != 1 %>
+		     <tr>
+		      <th class="label"><b>ID</b></th>
+	  	      <th class ="label"><b>Subject</b></th>
+		     </tr>
+		     <% end %>
+		     <tr>
+		      <td><%= i %></td>
+		      <td><a href="/announcements/display?id=<%= @announcements[j].id %>"><%= @announcements[j].title  %></a> </td>
+		     </tr>
+		     <% i = i + 1 %>
+		     <% x = 1 %>
+		   <% end %>
+	    <% end %>
+	    </table>
+	   </span>
+	  </div>
+	  
+	<% if x == 0 %>
+	<br clear="all" />
+	<div>
+	<span style="float:center">
+		<p> Currently no announcements for the course <%= @course_id %></p>
+	</span></div>
+	<% end %>
+
+<!--%= render :partial => "display",
+              :parameters => {@course, @announcement}, :locals  => {:field => "announcement"} %-->
+  </p>
+  <% end %>
+<% end %>
+
+

@@ -1,0 +1,49 @@
+<html>
+<title><% @title %> </title>
+<body>
+<h2>Create a Course</h2>
+<%= form_for :course do |form| %>
+<fieldset>
+<legend><b>Enter the Course Details</b></legend>
+<div class="post">
+<p>
+<label for title="creatde_by">Created by:</label>
+<%= @user.email %>
+</p>
+<p>
+  <label for="title">Title: </label><br>
+  <%= form.text_field :title %>
+</p>
+<p>
+    <label for= "description">Description: </label><br>
+    <%= form.text_area :description, :rows => 15,
+				     :cols => 40 %>
+</p>
+<p>
+  <label for="category_id">Category ID: </label>
+  <select name="category_id">
+    <% @categories.each do |category| %>
+	  <option value=<%= category.name %> selected=""><%= category.name %></option>
+    <% end %>
+  </select>
+    <!--%= form.text_field :category_id %-->
+</p>
+<p>
+	<label for="status">Status: </label>
+	<select name="status">
+	  <option value="OPENED" selected="selected">OPENED</option>
+	  <option value="CLOSED">CLOSED</option>
+	</select>
+</p>
+<div>
+<span style="float: right">
+<%= submit_tag "Create", :align => "right" %></span></div>
+</div>
+</fieldset>
+<% end %>
+</body>
+
+<div id="footer">
+  Copyright © 2013, My Company. All rights reserved.
+</div>
+</html>
