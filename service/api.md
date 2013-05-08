@@ -343,8 +343,8 @@ Status Code | Response Body | Condition
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
+Method | URL
+-------|----
 DELETE | http://host:port/course/`:id`
 
 #### Response
@@ -365,8 +365,8 @@ Status Code | Response Body | Condition
 
 #### Request
 
-Method | URL | Request Body
--------|-----|-------------
+Method | URL
+-------|----
 GET | http://host:port/course/`:id`/participant**s**
 
 #### Response
@@ -378,14 +378,40 @@ Status Code | Response Body | Condition
 404 (Not Found) | Error JSON | Course not found
 500 (Internal Server Error) | Error JSON | Other Errors
 
-### Drop / Enroll Course
+### Enroll Course
 
-* For Enroll, just update the course entity with course id by adding a user to the participants.
-* For Drop, it is better to change the status of this participant record to dropped.
-  Or you can simply remove it, depends on your implementation.
-* *Suggest URL for API:*
-  - Enroll: POST http://host:port/course/`:id`/participant**s** with `{email:..., role:..., status:...}`
-  - Drop: DELETE http://host:port/course/`:id`/participant/`:email`
+#### Request
+
+Method | URL | Request Body
+-------|-----|-------------
+POST | http://host:port/course/`:course_id`/participant**s** | Participant JSON (Required)
+PUT | http://host:port/course/`:course_id`/participant/`:email` | Participant JSON (Optional)
+
+#### Response
+
+Status Code | Response Body | Condition
+------------|---------------|----------
+200 (OK) | Success JSON | Delete success
+400 (Bad Request) | Error JSON | Email or ID is invalid
+404 (Not Found) | Error JSON | User not found
+500 (Internal Server Error) | Error JSON | Other Errors
+
+### Drop Course
+
+#### Request
+
+Method | URL
+-------|----
+DELETE | http://host:port/course/`:course_id`/participant/`:email`
+
+#### Response
+
+Status Code | Response Body | Condition
+------------|---------------|----------
+200 (OK) | Success JSON | Delete success
+400 (Bad Request) | Error JSON | Email or ID is invalid
+404 (Not Found) | Error JSON | User not found
+500 (Internal Server Error) | Error JSON | Other Errors
 
 ## Announcement
 
@@ -967,7 +993,7 @@ exists.
   password: // SHA-1 Hashed (lowercase, hex)
   first_name:
   last_name:
-  address: (optional) {
+  address: (optional) { // Address
     address:
     city:
     state:
@@ -999,10 +1025,10 @@ exists.
   description
   attachments: []
   category_id: // or we can just use the category name as its id
-  participants: [{ index it or separate to another collection
+  participants: [{ // Participant, index its email or separate to another collection
     email: // user’s email
-    role: // student or instructor/owner or assistant  
-    status: // dropped, enrolled, etc.      
+    role: // student or instructor/owner or assistant
+    status: // dropped, enrolled, etc.
   }, ...]
   created_by: // the user who create it, and auto add to the participants as instructor/owner
   created_at: "2013-04-18T08:56:20.583Z" // ISO format
