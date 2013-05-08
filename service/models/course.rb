@@ -3,9 +3,16 @@
 class Participant
   include MongoMapper::EmbeddedDocument
 
-  key :email, String, required: true
+  key :email, String,
+      required: true,
+      length: 255,
+      format: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/
   key :role, Symbol, default: :STUDENT #, in: [:STUDENT, :INSTRUCTOR, :OWNER, :ASSISTANT, :GUEST]
   key :status, Symbol, default: :ENROLLED #, in: [:ENROLLED, :DROPPED]
+
+  before_validation do
+    self.email.downcase!
+  end
 
   def serializable_hash(options = {})
     super({except: :id}.merge(options))
@@ -33,6 +40,10 @@ class Course
     elsif users.length == 0 || (users.index { |p| p.email == owner.email }).nil?
       users << owner
     end
+  end
+
+  before_save do
+    self.participants.uniq! { |p| p.email }
   end
 
 end
