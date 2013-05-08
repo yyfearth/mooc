@@ -1,7 +1,7 @@
-RESTful API (Draft)
+RESTful API
 ===========
 
--- Proposed by Wilson (Yufan) Yang <yyfearth@gmail.com>
+-- by Wilson (Yufan) Yang <yyfearth@gmail.com>
 
 Some principals I followed:
 
