@@ -34,7 +34,7 @@ DISCUSSION_COURSE_URLS.each do |path|
 end
 
 get DISCUSSIONS_URL do
-  puts 'Search discussion'
+  puts 'Search discussion: ' << params.inspect
   ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
 end
 
