@@ -8,21 +8,26 @@ class App < Sinatra::Application
   configure do
     disable :sessions
     set :static, false
+    set :protection, except: :ip_spoofing
 
-    # read the local configuration
-    config = YAML.load_file File.dirname(__FILE__) + '/config/mongo.yml'
+    # read vcap service settings
+    credentials = JSON.parse(ENV['VCAP_SERVICES'])['mongodb-2.0'].first['credentials'] rescue {}
 
-    environment = config['environment']
+    db_host = credentials['hostname'] rescue 'localhost'
+    db_port = credentials['port'] rescue 27017
+    db_name = credentials['db'] rescue 'mooc'
+    db_username = credentials['username'] rescue ''
+    db_password = credentials['password'] rescue ''
 
-    db_host = config[environment]['host']
-    db_port = config[environment]['port']
-    db_name = config[environment]['database']
+    db_conn = "mongodb://#{db_username}:#{db_password}@#{db_host}:#{db_port}/#{db_name}"
 
     # Configure the environment
 
-    MongoMapper.connection = Mongo::Connection.new db_host, db_port
+    #MongoMapper.connection = Mongo::Connection.new(db_host, db_port)
+    #MongoMapper.database = db_name
+    #MongoMapper.database.authenticate db_username, db_password
+    MongoMapper.connection = Mongo::Connection.from_uri(db_conn)
     MongoMapper.database = db_name
-
     MongoMapper.connection.connect
 
     helpers do
