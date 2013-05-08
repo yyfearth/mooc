@@ -1,14 +1,19 @@
 <html>
 <title><% @title %> </title>
 <body>
+<% 
+fname = @user.first_name
+lname = @user.last_name
+user=fname + ' ' + lname
+%>
 <h2>Create a Course</h2>
 <%= form_for :course do |form| %>
 <fieldset>
 <legend><b>Enter the Course Details</b></legend>
 <div class="post">
 <p>
-<label for title="creatde_by">Created by:</label>
-<%= @user.email %>
+<label for title="created_by">Created by:</label>
+<%= user %> 
 </p>
 <p>
   <label for="title">Title: </label><br>
