@@ -106,7 +106,7 @@ helpers do
   def bad_request_if_id_not_match!(json = @json)
     url_id = @id || params[:id]
     json_id = json['id']
-    bad_request! 'ID_NOT_MATCH', "Id in URL is not matched '#{url_id}' != '#{json_id}'" if url_id != json_id
+    bad_request! 'ID_NOT_MATCH', "Id in URL is not matched '#{url_id}' != '#{json_id}'" if url_id && json_id && url_id != json_id
   end
 
   ### results
