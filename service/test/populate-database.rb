@@ -24,6 +24,7 @@ require_relative '../models/announcement'
 
 User.destroy_all
 Course.destroy_all
+Category.destroy_all
 Discussion.destroy_all
 Message.destroy_all
 
@@ -82,7 +83,7 @@ end
                                  created_by: @users[rand(@users.size)].email,
                              })
     discussion.message_ids << message.id
-    puts message
+    puts message.inspect
   end
 
   discussion.save
