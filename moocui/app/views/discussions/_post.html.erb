@@ -1,0 +1,36 @@
+<div class="post">
+  <div class="post_title">
+   
+    Title : <%= sanitize post.title %>
+<%= javascript_include_tag "prototype" %>
+    <% unless hide_edit_links? %>
+     <% if logged_in? and post.authorized?(User.find(session[:user_id])) %>
+      <span style="float:right">
+      <%= link_to_unless_current 'Show', post_path(post.id) %> |
+      <%= link_to_unless_current 'Edit', edit_post_path(post.id) %> |
+      <%= link_to 'Destroy', post_path(post.id),
+                            :confirm => 'Are you sure?', :method => :delete %>
+
+      </span>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="post_ques_string"><%= sanitize post.ques_string %></div>
+  <div class="post_creation_date">
+    Posted <%= time_ago_in_words post.created_at %> ago
+    <% if post.updated_at != post.created_at %>
+      <br /> Modified <%= time_ago_in_words post.updated_at %> ago
+    <% end %>
+  </div>
+     
+     <% if logged_in? and post.match?(post.id) %>
+           <%= link_to "Answer this Query!", 
+		      :controller => "answers",
+		      :action => "new",
+		      :idd => post.id %>
+     <% end %>  
+     <div id="answers_for_post_<%= post.id %>">
+	<%= render :partial => "answers/answer", :collection => post.answers %>
+     </div>
+
+</div>

@@ -1,0 +1,164 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require_tree .
+ */
+
+body {
+font-family: sans-serif;
+background: gray;
+margin: 0;
+text-align: center;
+}
+#whole_page {
+width: 50em;
+margin: auto;
+padding: 0;
+text-align: left;
+border-width: 0 1px 1px 1px;
+border-color: black;
+border-style: solid;
+}
+#header {
+color: white;
+background: maroon; /* No "ruby" defined in HTML color names! */
+font-size: 24pt;
+padding: 0.25em;
+margin-bottom: 0;
+}
+#nav {
+color: black;
+font-size: 12pt;
+font-weight: bold;
+background: #ccc;
+padding: 0.5em;
+}
+#nav a, #nav a:visited {
+color: maroon;
+text-decoration: none;
+}
+#nav a:hover {
+border-bottom: 2px dotted maroon;
+}
+#content {
+height: 100%;
+background: white;
+padding: 1em;
+}
+#content h1 {
+font-size: 18pt;
+}
+
+#notice {
+border: 1px solid green;
+padding: 1em;
+margin: 1em;
+margin-bottom: 2em;
+background-color: lightgray;
+font: bold smaller sans-serif;
+}
+
+/* Profile Styles */
+td.label {
+  text-align: right;
+  font-weight: bold;
+  white-space: nowrap;
+}
+input {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.edit_link a {
+  text-decoration: none;
+  color: red;
+}
+#left_column {
+  float: left;
+  width: 300px;
+}
+#main_content {
+  margin-left:   320px;
+}
+.sidebar_box {
+  background-color: #aaffff;
+  border: 1px solid #aaa;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.sidebar_box h2 {
+  margin-top: 0px;
+  padding: 6px;
+  background-image:URL("profille-head.png");
+  font-size: 13px;
+  color: maroon;
+  font-weight:bold;
+}
+.sidebar_box p {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+.sidebar_box .header    {
+  float: left;
+}
+.sidebar_box .edit_link {
+  float: right;
+}
+/* Spec Style */
+#full_name {
+  font-size: xx-large;
+}
+#occupation{
+  font-size: x-large;
+}
+#location {
+  font-size: large;
+}
+/* FAQ Style */
+.faq {
+  float: left;
+  padding: 20px;
+}
+#about_me {
+  padding: 10px;
+}
+.sidebar_box_contents, .faq_answer {
+  padding: 0 10px 10px 10px;
+}
+.faq_answer textarea {
+  width: 280px;
+  background: #ff9;
+}
+
+/* Blog Styles */
+.post {
+  display: block;
+  margin-bottom: 1.5em;
+}
+.post_title {
+  font-weight: bold;
+}
+.post_ques_string {
+  padding: 1em;
+}
+.post_creation_date, .post_modification_date {
+  text-align: right;
+}
+.post_actions {
+  float: right;
+}
+/* Answer Styles */
+.answer {
+  min-height: 90px;
+}
+.thumbnail {
+  display: block;
+  float: left;
+  margin-right: 1em;
+}

@@ -1,0 +1,35 @@
+<fieldset>
+<legend><b>Course Details</b></legend>
+<% valid = 0 %>
+<% @courses.each do |course| %>
+<p>
+  <% if @user.email == course.created_by %>
+   <%= course.title %>
+   <br>
+   <%= course.description %>
+   <br>
+   <%= course.status %>
+   <br>
+   <%= course.created_at %>
+   <br/>
+   <!--%= course.id %-->
+   <% valid = 1 %>
+   <div>
+   <span style="float:right">
+   <%= link_to "Delete course", 
+		      :controller => "courses",
+		      :action => "delete",
+		      :id => course.id %>
+   <!--a href="/courses/delete?id=<%= course.id %>">Delete course</a--></span></div>
+  <% end %>
+</p>
+<% end %>
+<% if valid == 0 %>
+  <h2> No courses created by you.</h2>
+  <%= link_to "Create your course", :controller => "courses", :action => "create" %>
+<% end %>
+</fieldset>
+
+<div id="footer">
+  Copyright © 2013, My Company. All rights reserved.
+</div>

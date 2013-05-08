@@ -1,0 +1,21 @@
+// Place all the styles related to the Courses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+table.users {
+background: #fff;
+margin-left: 2em;
+}
+table.users td.bottom {
+border-top: 1px solid #999;
+padding-top: 10px;
+}
+table.users th {
+color: white;
+background: maroon;
+font-weight: normal;
+}
+table.users th a {
+color: white;
+text-decoration: underline;
+}

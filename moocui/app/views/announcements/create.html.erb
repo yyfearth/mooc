@@ -1,0 +1,37 @@
+<html>
+<title><% @title %> </title>
+<body>
+<h2>Create an Announcement</h2>
+<%= form_for :announcement do |form| %>
+<fieldset>
+<legend><b>Announcement</b></legend>
+<div class="post">
+<p>
+  <label for="course_id">Announcement for Course </label>
+  <select name="course_id">
+    <% @courses.each do |course| %>
+	  <option value=<%= course.title %> selected=""><%= course.title %></option>
+    <% end %>
+  </select>
+    <!--%= form.text_field :category_id %-->
+</p>
+<p>
+  <label for="title">Announcement Title: </label><br>
+  <%= form.text_field :title %>
+<p>
+    <label for= "content">Message: </label><br>
+    <%= form.text_area :content,     :rows => 15,
+				     :cols => 40 %>
+</p>
+<div>
+<span style="float: right">
+<%= submit_tag "Create", :align => "right" %></span></div>
+</div>
+</fieldset>
+<% end %>
+</body>
+<br/>
+<div id="footer">
+  Copyright © 2013, My Company. All rights reserved.
+</div>
+</html>

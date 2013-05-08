@@ -1,0 +1,10 @@
+<h1><%= link_to 'Your Posted Discussions', discussions_path %>: Post a new discussion</h1>
+<% form_for(:discussion, :url => discussion_path) do |form| %>
+<fieldset>
+    <legend>New Discussion</legend>
+    <%= render :partial => "form", :locals => { :form => form } %>
+    <%= submit_tag "Create", :class => "submit" %>
+</fieldset>
+<% end %>
+<br />
+<%= link_to 'Back', :controller => "discussions", :action => "index" %>
