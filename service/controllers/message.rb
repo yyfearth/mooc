@@ -1,13 +1,11 @@
-MESSAGE_URL = '/discussion/:discussion_id/message'
-MESSAGES_URL = %r{/messages?'}
-MESSAGE_ID_URL = "#{MESSAGE_URL}/:id"
-MESSAGE_COURSE_URLS = ['/message/course/:id', MESSAGE_URL]
+MESSAGE_URL = %r{^/discussions?/(?<discussion_id>[\w\d]{24})/messages?$}
+MESSAGE_ID_URL = %r{^/discussions?/(?<discussion_id>[\w\d]{24})/messages?/(?<id>[\w\d]{24})$}
 
 before "#{MESSAGE_URL}*" do
   @entity_name = Message.name
 end
 
-MESSAGE_COURSE_URLS.concat([MESSAGE_ID_URL]).each do |url|
+[MESSAGE_URL, MESSAGE_ID_URL].each do |url|
   before url do
     @id = params[:id]
     @discussion_id = params[:discussion_id]
@@ -26,7 +24,7 @@ get MESSAGE_ID_URL do
   ok message
 end
 
-get MESSAGES_URL do
+get %r{/discussions?/(?<discussion_id>.+)/messages?} do
   puts 'Search message'
   ok do_search Message, params, {q: [:title], fields: [:course_id], }
 end

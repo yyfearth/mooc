@@ -1,44 +1,33 @@
-DISCUSSION_URL = '/discussion'
-DISCUSSIONS_URL = '/discussions'
-DISCUSSION_ID_URL = "#{DISCUSSION_URL}/:id"
-DISCUSSION_COURSE_URLS = %w(/discussion/course/:id /course/:id/discussion)
+DISCUSSION_URL = %r{^/discussions?$}
+DISCUSSION_ID_URL = %r{^/discussions?/(?<id>[\w\d]{24})$}
 
-before "#{DISCUSSION_URL}*" do
+before '/discussions?/*' do
   @entity_name = Discussion.name
 end
 
-DISCUSSION_COURSE_URLS.concat([DISCUSSION_ID_URL]).each do |url|
+[DISCUSSION_ID_URL].each do |url|
   before url do
     @id = params[:id]
     @entity_name = Discussion.name
-    puts 'id = ' << @id.to_s
+
+    #discussion = Discussion.first({course_id: @id})
+    #not_found_if_nil! discussion
   end
+end
+
+get DISCUSSION_URL do
+  ok do_search Discussion, params, {q: [:title], fields: [:course_id], }
 end
 
 get DISCUSSION_ID_URL do
   discussion = Discussion.find_by_id @id
 
-  not_found_if_nil!(discussion)
+  not_found_if_nil! discussion
 
   ok(discussion)
 end
 
-DISCUSSION_COURSE_URLS.each do |path|
-  get path do
-    discussion = Discussion.first({course_id: @id})
-
-    not_found_if_nil! discussion
-
-    ok(discussion)
-  end
-end
-
-get DISCUSSIONS_URL do
-  puts 'Search discussion: ' << params.inspect
-  ok(do_search(Discussion, params, {q: [:title], fields: [:course_id], }))
-end
-
-post %r{/discussions?} do
+post DISCUSSION_URL do
   discussion = Discussion.create @json
   puts 'Create discussion: ' << discussion.inspect
   created(discussion)
