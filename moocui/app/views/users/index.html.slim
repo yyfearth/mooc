@@ -1,0 +1,43 @@
+h1 User Profile
+#left_column
+  .sidebar_box
+    .sidebar_box_contents
+      table
+        tr
+          td.label Email:
+          td= @user.email
+        tr
+          td.label First name:
+          td= @user.first_name
+        tr
+          td.label Last name:
+          td= @user.last_name
+- if !@enroll.nil? and @enroll!=[]
+  #bio.faq_answer
+    span style="float:center"
+      table.users
+        tr
+          th.label
+            b Title
+          th.label
+            b Description
+        - @enroll.each do |course|
+          tr
+            td
+              a href="/courses/index?id=#{course.id}"
+            td= course.description
+- else
+  div
+    span style="float:right"
+      | Currently you are not enrolled in any courses.
+div
+  br clear="all"
+  br clear="all"
+  b Discussions:
+  span.edit_link
+    = link_to 'Discussions', :action => 'index', :controller => 'discussions', :collection => @blog
+  br clear="all"
+  span style="float: right"
+    = nav_link_courses 'Create your course', 'courses', 'create'
+    = link_to 'Delete a course', :controller => 'courses', :action => 'delete'
+br clear="all"

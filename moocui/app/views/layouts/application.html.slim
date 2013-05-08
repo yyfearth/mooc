@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    meta charset='utf-8'
+    title 'Project MOOC'
+    = stylesheet_link_tag 'application', :media => 'all'
+    = stylesheet_link_tag 'users', :media => 'all'
+    = csrf_meta_tags
+  body
+    #whole_page
+      #header Project MOOC
+      #nav
+        span style="float: right"
+          - if logged_in?
+            = nav_link 'Announcements', 'announcements', 'index'
+            = nav_link 'Majors', 'categories', 'index'
+            = nav_link 'Profile', 'users', 'index'
+            = nav_link 'Logout', 'users', 'logout'
+          - else
+            = nav_link 'Register Here!', 'users', 'register'
+            = nav_link 'Login', 'users', 'login'
+        = nav_link 'Home', 'home', 'index'
+        = nav_link 'Courses', 'courses', 'index'
+        = nav_link 'Discussion', 'discussions', 'index'
+        br clear="all"
+      #content
+        = yield
+
+      #footer
+        | Copyright © 2013, MyyApps. All rights reserved.
+
+    = javascript_include_tag 'application'

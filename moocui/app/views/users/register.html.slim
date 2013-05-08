@@ -1,0 +1,19 @@
+h2 Register
+= form_for :user do |form|
+  fieldset
+    legend
+      | Enter Your Details
+    div
+      label for="email"
+      = form.email_field :email
+    div
+      label for="firstname"
+      = form.text_field :first_name
+    div
+      label for="lastname"
+      = form.text_field :last_name
+    div
+      = form.password_field :password
+    div
+      = form.password_field :confirm_password
+    = submit_tag 'Register!', :class => 'submit'

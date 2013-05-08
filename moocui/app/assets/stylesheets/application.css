@@ -8,6 +8,8 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
+ *= require bootstrap
+ *= require flat-ui
  *= require_self
  *= require_tree .
  */
@@ -20,7 +22,7 @@ body {
 }
 
 #whole_page {
-    width: 50em;
+    width: 1024px;
     margin: auto;
     padding: 0;
     text-align: left;
@@ -30,7 +32,7 @@ body {
 
 #header {
     color: white;
-    background: maroon; /* No "ruby" defined in HTML color names! */
+    background: maroon;
     font-size: 24pt;
     padding: 0.25em;
     margin-bottom: 0;

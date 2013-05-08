@@ -1,0 +1,21 @@
+h1 Log in
+fieldset
+  legend
+    b Enter login details for MOOC
+  = form_for :user do |form|
+    .form_row
+      p
+        label for="email"
+        = form.email_field :email
+    p
+      label for="password"
+      = form.password_field :password
+    .form_row
+      label for="remember_me"
+      = check_box_tag :remember_me
+    .form_row
+      = submit_tag 'Login!', :class => 'submit'
+
+  div
+    | Not a member?
+    = link_to 'Register now!', :action => 'register'
