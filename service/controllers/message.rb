@@ -23,12 +23,12 @@ get MESSAGE_ID_URL do
   message = Message.find_by_id @id
   not_found_if_nil! message
 
-  ok(message)
+  ok message
 end
 
 get MESSAGES_URL do
   puts 'Search message'
-  ok(do_search(Message, params, {q: [:title], fields: [:course_id], }))
+  ok do_search Message, params, {q: [:title], fields: [:course_id], }
 end
 
 post MESSAGE_URL do
@@ -39,7 +39,7 @@ post MESSAGE_URL do
   message.discussion_id = discussion.id
   message.save
 
-  created(message)
+  created message
 end
 
 put MESSAGE_ID_URL do
@@ -69,7 +69,7 @@ delete MESSAGE_ID_URL do
   ok message
 end
 
-# HACK: for debug
 get %r{/messages?/(?:list|all)} do
+  puts 'Get all messages'
   ok Message.all
 end
