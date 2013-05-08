@@ -27,7 +27,7 @@ describe 'Discussion API' do
     }
 
     get '/discussion/' << @vars[:discussion]['id'], request_data.to_json
-    last_response.status == 200
+    last_response.status.should == 200
 
     response_data = JSON.parse last_response.body
     response_data['title'].should == request_data[:title]
@@ -41,7 +41,7 @@ describe 'Discussion API' do
     }
 
     put '/discussion/' << @vars[:discussion]['id'], request_data.to_json
-    last_response.status == 200
+    last_response.status.should == 200
 
     response_data = JSON.parse last_response.body
     (/[\w\d]/ =~ response_data['id']).nil?.should be_false
@@ -49,6 +49,6 @@ describe 'Discussion API' do
 
   it 'delete a discussion' do
     delete '/discussion/' << @vars[:discussion]['id']
-    last_response.status == 200
+    last_response.status.should == 200
   end
 end
