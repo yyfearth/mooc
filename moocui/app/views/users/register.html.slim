@@ -5,15 +5,15 @@ h2 Register
       | Enter Your Details
     div
       label for="email"
-      = form.email_field :email
+      = form.email_field :email, placeholder: 'Email'
     div
       label for="firstname"
-      = form.text_field :first_name
+      = form.text_field :first_name, placeholder: 'First Name'
     div
       label for="lastname"
-      = form.text_field :last_name
+      = form.text_field :last_name, placeholder: 'Last Name'
     div
-      = form.password_field :password
+      = form.password_field :password, placeholder: 'Password'
     div
-      = form.password_field :confirm_password
+      = form.password_field :confirm_password, placeholder: 'Confirm Password'
     = submit_tag 'Register!', :class => 'submit'
