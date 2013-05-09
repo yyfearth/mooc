@@ -15,7 +15,13 @@ Moocui::Application.routes.draw do
 
   get 'courses/search'
 
-  get 'courses/add'
+  get 'courses/create'
+
+  post 'courses/create'
+
+  get 'courses/enroll'
+
+  get 'courses/drop'
 
   get 'categories/index'
 
@@ -40,8 +46,6 @@ Moocui::Application.routes.draw do
   post 'users/login'
 
   get 'users/logout'
-
-  post 'users/logout'
 
   post 'announcements/index'
   # The priority is based upon order of creation:

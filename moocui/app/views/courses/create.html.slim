@@ -1,0 +1,32 @@
+h2 Create a Course
+= form_for :course do |form|
+  fieldset
+    legend
+      b Enter the Course Details
+    .form_row
+      label for="title" Title
+      br
+        = form.text_field :title
+    .form_row
+      label for="description" Description:
+      br
+        = form.text_area :description, :rows => 5, :cols => 40
+    .form_row
+      label for="category_id" Category:
+      select#category_id name="course[category_id]"
+        - @categories.each do |category|
+          option value=(category.id)
+            = category.name
+    .form_row
+      label for="status" Status:
+      select#status name="course[status]"
+        option selected="selected" value="OPENED" OPENED
+        option value="CLOSED" CLOSED
+    .form_row
+      label title="created_by" Created By:
+      = " #{@user.first_name} #{@user.last_name} (#{@user.email})"
+    .form_row
+      = check_box_tag 'discussion', 1, true
+      label for="discussion" Create Discussion
+    div
+      = submit_tag 'Create'

@@ -3,22 +3,13 @@ class UsersController < ApplicationController
 
   def index
     user=session[:usr]
-    @usr = User.find(user.email)
-    @blog= Discussion.new
 
-    p user.email
     if user.nil?
       redirect_to :action => 'login'
     else
-      @user=user
-      #@pa = Course.find(:all, :params => {:'participants.email' => user.email})
-
-      #Course.find(:all, :params => {:'participants.email' => 'test2@test.com'}) => goes directly to the database and finds the 			following based on participans.email  :::::
-      # [#<Course:0xae7e99c @attributes={"category_id"=>"test", "created_at"=>"2013-05-05T02:32:35Z", "created_by"=>"test@test.com", 			"description"=>"A test Course has more participants", "id"=>"5185c4c3a726764357000004", "participants"=>[			 			#<Course::Participant:0xa6a7804 	 @attributes={"email"=>"test2@test.com", "role"=>"student", "status"=>"ENROLLED"}, 			@prefix_options={}, @persisted=false>, 		  	  #<Course::Participant:0xa6a723c @attributes={"email"=>"abc@test.com", 		"role"=>"student", "status"=>"DROPPED"}, @prefix_options={}, 		@persisted=false>, #<Course::Participant:0xa6a6f80 			@attributes={"email"=>"test@test.com", "role"=>"OWNER", "status"=>"ENROLLED"}, 		@prefix_options={}, @persisted=false>], 		"status"=>"OPENED", "title"=>"Test", "updated_at"=>"2013-05-05T02:32:35Z"}, @prefix_options={}, 	@persisted=true>]
-
-      @enroll= Course.find(:all, :params => {:participant_email => user.email})
+      @user = user
+      @enroll = Course.find(:all, :params => {:participant_email => user.email})
       p @enroll
-      #Course.find(:all, :params => {:participant_email => user.email}) => goes to the framework and executes the get method to search 			for courses in the DB that takes only :participant_email as parameter since it is mapped to the search method in course.rb inside 			the Sinatra code.
     end
   end
 

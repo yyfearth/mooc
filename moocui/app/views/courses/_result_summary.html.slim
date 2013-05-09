@@ -1,0 +1,25 @@
+table.users
+  tr
+    th.label
+      b Title
+    th.label
+      b Description
+    th.label
+      b Status
+    th.label
+      b Enroll/Drop
+  - @courses.each do |course|
+    tr
+      td
+        = course.title
+      td= course.description
+      - p = course.participants.detect { |p| p.email == @user.email }
+      - if p
+        td= "#{p.role.capitalize} - #{p.status.capitalize}"
+        - if p.status == :DROPPED || p.status.upcase == 'DROPPED'
+          td= link_to 'Re-enroll', 'enroll?id=' + course.id
+        - else
+          td= link_to 'Drop', 'drop?id=' + course.id
+      - else
+        td
+        td= link_to 'Enroll', 'enroll?id=' + course.id

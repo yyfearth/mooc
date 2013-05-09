@@ -1,44 +1,42 @@
-h1 User Profile
-#left_column
-  .sidebar_box
-    .sidebar_box_contents
-      table
-        tr
-          td.label Email:
-          td= @user.email
-        tr
-          td.label First name:
-          td= @user.first_name
-        tr
-          td.label Last name:
-          td= @user.last_name
+h1
+  | Welcome,&nbsp;
+  = @user.first_name
+  | &nbsp;
+  = @user.last_name
+  small
+    | &nbsp;&lt;
+    =@user.email
+    | &gt;
 - if !@enroll.nil? and @enroll!=[]
-  #bio.faq_answer
-    span style="float:center"
-      table.users
-        tr
-          th.label
-            b Title
-          th.label
-            b Description
-        - @enroll.each do |course|
-          tr
-            td
-              a href="/courses/index?id=#{course.id}"
-                = course.title
-            td= course.description
+  hr
+  h3 Courses
+  table.users
+    tr
+      th.label
+        b Title
+      th.label
+        b Description
+      th.lable
+        b Status
+      th.lable
+        b Drop
+    - @enroll.each do |course|
+      tr
+        td
+          a href="/courses/index?id=#{course.id}"
+            = course.title
+        td= course.description
+        - p = course.participants.detect { |p| p.email == @user.email }
+        td= "#{p.role.capitalize} - #{p.status.capitalize}"
+        - if p.status == :DROPPED || p.status.upcase == 'DROPPED'
+          td= link_to 'Re-enroll', '/courses/enroll?id=' + course.id
+        - else
+          td= link_to 'Drop', '/courses/drop?id=' + course.id
 - else
   div
-    span style="float:right"
-      | Currently you are not enrolled in any courses.
+    | Currently you are not enrolled in any courses.
+hr
 div
-  br clear="all"
-  br clear="all"
-  b Discussions:
-  span.edit_link
-    = link_to 'Discussions', :action => 'index', :controller => 'discussions', :collection => @blog
-  br clear="all"
-  span style="float: right"
-    = nav_link_courses 'Create your course', 'courses', 'create'
-    = link_to 'Delete a course', :controller => 'courses', :action => 'delete'
-br clear="all"
+  = nav_link_courses 'Create your course', 'courses', 'create'
+  | &nbsp;|&nbsp;
+  = link_to 'Delete a course', :controller => 'courses', :action => 'delete'
