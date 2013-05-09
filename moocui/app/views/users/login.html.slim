@@ -12,7 +12,7 @@ fieldset
       = form.password_field :password, placeholder: 'Password'
     .form_row
       label for="remember_me"
-      = check_box_tag :remember_me
+      = check_box_tag :remember_me, 1, true
       span Remember Me
     .form_row
       = submit_tag 'Login!', :class => 'submit'

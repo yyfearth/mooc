@@ -21,8 +21,7 @@
           <% x = 0 %>
           <% i=1 %>
         <div id="bio" class="faq_answer">
-	    <span style="float:center">
-	      <table class="users">
+          <table class="users">
             <% (0...@announcements.length).each do |j| %>
                 <% if @course_id.downcase == @announcements[j].title.downcase %>
                     <% if x != 1 %>
@@ -42,15 +41,13 @@
                 <% end %>
             <% end %>
           </table>
-	   </span>
         </div>
 
         <% if x == 0 %>
             <br clear="all"/>
             <div>
-	<span style="float:center">
-		<p> Currently no announcements for the course <%= @course_id %></p>
-	</span></div>
+              <p> Currently no announcements for the course <%= @course_id %></p>
+            </div>
         <% end %>
 
         </p>

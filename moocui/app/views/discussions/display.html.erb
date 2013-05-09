@@ -1,15 +1,7 @@
-<html>
-<body>
-<br clear="all"/>
-
 <div class="form_row">
-<span style="float:center">
-   <% if !@content.nil? and @content!=[] %>
-	<p>Discussion for Course: <%= @content.title %>
-   <% else %>
-     <p> Currently no discussions exist for the course. </p>
-   <% end %>
-</span>
+  <% if !@content.nil? and @content!=[] %>
+      <p>Discussion for Course: <%= @content.title %>
+  <% else %>
+      <p> Currently no discussions exist for the course. </p>
+  <% end %>
 </div>
-</body>
-</html>

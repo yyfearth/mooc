@@ -14,20 +14,13 @@ class User < ActiveResource::Base
     cookies.delete(:authorization_token)
   end
 
-  # Clear the password (typically to suppress its display in a view).
-  def clear_password!
-    self.password = nil
-    self.password_confirmation = nil
-    self.current_password = nil
-  end
-
   def remember_me?
-    remember_me == "1"
+    remember_me == '1'
   end
 
   def remember!(cookies)
     cookie_expiration = 10.years.from_now
-    cookies[:remember_me] = {:value => "1",
+    cookies[:remember_me] = {:value => '1',
                              :expires => cookie_expiration}
     self.authorization_token = unique_identifier
     save!

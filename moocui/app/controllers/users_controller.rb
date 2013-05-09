@@ -51,18 +51,19 @@ class UsersController < ApplicationController
   def login
     @title = 'Log in to MOOC'
     if request.get?
-      @user = User.new(email: '', remember_me: 1)
+      @user = User.new(email: params[:user] || '', remember_me: 1)
     elsif param_posted?(:user) #uses form_for :user => form_for uses post method and get|put|delete uses params[:id]
-      @user = User.new(params[:user])
-      @users = User.find(@user.email)
-      user = User.find(@user.email)
-      p @users.email
-      p user
-      p params[:user][:password]
-      p Digest::SHA1.hexdigest(params[:user][:password])
-      if user && user.password==Digest::SHA1.hexdigest(params[:user][:password])
+      u = params[:user]
+      p u
+      begin
+        user = User.find(u[:email])
+      rescue
+        user = nil
+      end
+      if user && user.password==Digest::SHA1.hexdigest(u[:password])
+        p user
         user.login!(session)
-        if @user.remember_me?
+        if user.remember_me?
           user.remember!(cookies)
         else
           user.forget!(cookies)
@@ -70,7 +71,6 @@ class UsersController < ApplicationController
         flash[:notice] = "User #{user.email} logged in!"
         redirect_to_forwarding_url
       else
-        @user.clear_password!
         flash[:notice] = 'Invalid User name/password combination'
       end
     end

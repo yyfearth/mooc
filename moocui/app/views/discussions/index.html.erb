@@ -1,16 +1,9 @@
-<html>
-<head>
-  <title><%= @title %></title>
-</head>
-<body>
 <h2>Discussion Forum</h2>
 <%= link_to_unless_current "Current Discussions", :action => "index" %>
-<br clear="all"/>
-<% if !@posts.nil? and @posts!= [] %>
 <br>
-    <% i = 1 %>
+<% if !@posts.nil? and @posts!= [] %>
+    <% i = 0 %>
     <div id="bio" class="faq_answer">
-      <span style="float:" center">
       <table class="users">
         <tr>
           <th class="label"><b>Sr. No</b></th>
@@ -19,26 +12,13 @@
         </tr>
         <% @courses.each do |course| %>
             <tr>
-              <td><%= i %> </td>
+              <td><%= i += 1 %> </td>
               <td><a href="/discussions/display?course_id=<%= course.id %>"><%= course.title %></a>
-              <td><%= course.created_by %>
+              <td><%= course.created_by %></td>
             </tr>
-            <% i=i+1 %>
         <% end %>
       </table>
-      </span>
     </div>
 <% else %>
-    <br clear="all"/><br clear="all"/>
-    <b><p>Currently no discussions exist. </p>
-      <br clear="all"/>
+    <p>Currently no discussions exist. </p>
 <% end %>
-<%= @content_for_layout %>
-</b></body>
-<br clear="all"/>
-
-<div id="footer">
-  Copyright © 2013, My Company. All rights reserved.
-</div>
-
-</html>
