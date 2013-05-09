@@ -10,7 +10,7 @@ The CMPE 275 Project 2
 Contributors
 ------------
 
-* Yufan Yang
-* Menghi Wan
-* Chihhan Chu
 * Manish Belsare
+* Chihhan Chu
+* Menghi Wan
+* Yufan Yang
