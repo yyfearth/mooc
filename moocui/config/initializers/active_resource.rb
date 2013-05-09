@@ -1,4 +1,4 @@
-class Entity < ActiveResource::Base
+class ActiveResource::Base
   self.site = 'http://mooc-api.cloudfoundry.com/'
   #self.element_name = '' #if get|put|delete, then element_path
   #self.collection_name = '' #if post, then collection_path
@@ -18,5 +18,4 @@ class Entity < ActiveResource::Base
   def to_json(options={})
     self.attributes.to_json(options)
   end
-
 end

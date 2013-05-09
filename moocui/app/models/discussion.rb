@@ -1,6 +1,4 @@
-require_relative 'base'
-
-class Discussion < Entity
+class Discussion < ActiveResource::Base
   # has_many :messages
   # belongs_to :user
   self.element_name = 'discussion'

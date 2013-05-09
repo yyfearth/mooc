@@ -1,6 +1,4 @@
-require_relative 'base'
-
-class Course < Entity
+class Course < ActiveResource::Base
   self.element_name = 'course'
   self.collection_name = 'courses'
   attr_accessor :discussion_yes
