@@ -31,7 +31,7 @@
 
         <p>
           <label for="category_id">Category ID: </label>
-          <select name="category_id">
+          <select name="course[category_id]">
             <% @categories.each do |category| %>
                 <option value=<%= category.name %> selected=
                 ""><%= category.name %></option>
@@ -46,6 +46,16 @@
             <option value="CLOSED">CLOSED</option>
           </select>
         </p>
+  	 <div class="form_row">
+	  <%= check_box_tag 'discussion', 1, true %>
+          <label for="discussion_yes">Create course with discussion forum</label>
+          
+        </div>
+	<div class="form_row">
+          <%= check_box_tag 'no_discussion', 0 %>
+          <label for="discussion_no">Create course without discussion forum</label>
+
+        </div>
         <div>
 <span style="float: right">
 <%= submit_tag "Create", :align => "right" %></span></div>

@@ -66,17 +66,23 @@ class CoursesController < ApplicationController
         @cat = Course.find(:all)
         @cat.each do |ctgy|
           if ctgy.title == params[:course][:title]
-            return
+		return
           end
         end
-        #@course = Course.new(course, :participants => [Participant.new(:email => @user.email)])
-        @course = Course.new(course)
-        @course.created_by=@user.email
-        if @course.save
-          flash[:notice] = "User #{@user.title} created!"
-          render :json => course
-          redirect_to :action => "index", :controller => "users"
-        end
+        p params['discussion']
+	p params[:category_id]
+	if params['discussion'] == '1'
+        course[:created_by] = @user.email
+          #@course = Course.new(course, :participants => [Participant.new(:email => @user.email)])
+          @course = Course.new(course)
+	  p @course.created_by
+          if @course.save
+		p @course
+		@discussion = Discussion.new(:course_id => @course.id, :title => @course.title, :created_by => @user.email)
+		@discussion.save
+                redirect_to :action => "index", :controller => "users"
+          end
+       end
       else
         respond_to do |format|
           format.html

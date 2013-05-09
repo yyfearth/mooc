@@ -4,25 +4,24 @@
 </head>
 <body>
 <h2>Discussion Forum</h2>
-<%= link_to_unless_current "Current Discussions", :action => "index" %> |
-<%= link_to_unless_current "Start a new discussion", :action => "new" %>
+<%= link_to_unless_current "Current Discussions", :action => "index" %>
+<br clear="all"/>
 <% if !@posts.nil? and @posts!= [] %>
+<br>
     <% i = 1 %>
     <div id="bio" class="faq_answer">
       <span style="float:" center">
       <table class="users">
         <tr>
           <th class="label"><b>Sr. No</b></th>
-          <th class="label"><b>Topic</b></th>
-          <th class="label"><b>Title</b></th>
+          <th class="label"><b>Course</b></th>
           <th class="label"><b>Creator</b></th>
         </tr>
-        <% @posts.each do |posts| %>
+        <% @courses.each do |course| %>
             <tr>
               <td><%= i %> </td>
-              <td><%= posts.course_id %>
-              <td><%= posts.title_id %>
-              <td><%= posts.created_by %>
+              <td><a href="/discussions/display?course_id=<%= course.id %>"><%= course.title %></a>
+              <td><%= course.created_by %>
             </tr>
             <% i=i+1 %>
         <% end %>
