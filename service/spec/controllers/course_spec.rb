@@ -15,7 +15,7 @@ describe 'Course API' do
         participants: [
             {
                 email: 'instructer@test.com',
-                role: 'instructer',
+                role: 'instructor',
                 status: 'drunk',
             },
             {
