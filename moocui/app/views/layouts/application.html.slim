@@ -2,7 +2,7 @@ doctype html
 html
   head
     meta charset='utf-8'
-    title 'Project MOOC'
+    title Project MOOC
     = stylesheet_link_tag 'application', :media => 'all'
     = stylesheet_link_tag 'users', :media => 'all'
     = csrf_meta_tags
@@ -13,14 +13,20 @@ html
         span style="float: right"
           - if logged_in?
             = nav_link 'Announcements', 'announcements', 'index'
+            | &nbsp;|&nbsp;
             = nav_link 'Majors', 'categories', 'index'
+            | &nbsp;|&nbsp;
             = nav_link 'Profile', 'users', 'index'
+            | &nbsp;|&nbsp;
             = nav_link 'Logout', 'users', 'logout'
           - else
             = nav_link 'Register Here!', 'users', 'register'
+            | &nbsp;|&nbsp;
             = nav_link 'Login', 'users', 'login'
-        = nav_link 'Home', 'home', 'index'
+        = nav_link 'Home', 'users', 'index'
+        | &nbsp;|&nbsp;
         = nav_link 'Courses', 'courses', 'index'
+        | &nbsp;|&nbsp;
         = nav_link 'Discussion', 'discussions', 'index'
         br clear="all"
       #content

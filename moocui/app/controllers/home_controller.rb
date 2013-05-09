@@ -1,9 +1,9 @@
 class HomeController < ApplicationController
   def index
-    @title = "Welcome to Project MOOC"
-    respond_to do |format|
-      format.html # index.html.slim
-      format.json { render :json => @title }
+    if session[:usr].to_s.empty?
+      redirect_to controller: 'users', action: 'login'
+    else
+      redirect_to controller: 'users', action: 'index'
     end
   end
 end
