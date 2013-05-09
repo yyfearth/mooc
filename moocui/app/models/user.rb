@@ -1,6 +1,4 @@
-require_relative 'base'
-
-class User < Entity
+class User < ActiveResource::Base
   self.element_name = 'user'
   self.collection_name = 'users'
   attr_accessor :remember_me
