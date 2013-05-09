@@ -6,20 +6,30 @@ helpers do
   def enroll
     course = Course.find_by_id @id
     not_found_if_nil! course
+    email = @json[:email] || @json['email']
+    participant = course.participants.detect { |p| p.email == email }
     begin
-      course.push_uniq participants: @json
-      ok "User #{@json['email']} enrolled course #{@id}"
+      if participant
+        participant.status = @json['status'] || :ENROLLED
+        participant.role = @json['role'] || :STUDENT
+        course.save!
+      else
+        course.push_uniq participants: @json
+      end
     rescue MongoMapper::DocumentNotValid => e
       invalid_entity! e
     end
+    ok "User #{@json['email']} enrolled course #{@id}"
   end
 
   def drop(email)
     course = Course.find_by_id @id
     not_found_if_nil! course
     participant = course.participants.detect { |p| p.email == email }
+    not_found! 'PARTICIPANT_NOT_FOUND', "Participant #{email} is not found in course #{course.id}" if participant.nil?
     begin
       participant.status = :DROPPED
+      course.save!
       ok "User #{email} dropped course #{@id}"
     rescue MongoMapper::DocumentNotValid => e
       invalid_entity! e
